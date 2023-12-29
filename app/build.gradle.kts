@@ -7,6 +7,12 @@ android {
     namespace = "com.example.madcamp_week1_rev"
     compileSdk = 34
 
+    viewBinding {
+        enable = true
+    }
+    dataBinding{
+        enable = true
+    }
     defaultConfig {
         applicationId = "com.example.madcamp_week1_rev"
         minSdk = 26
