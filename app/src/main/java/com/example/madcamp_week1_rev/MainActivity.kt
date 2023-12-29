@@ -1,13 +1,18 @@
 package com.example.madcamp_week1_rev
 
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.madcamp_week1_rev.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
+import androidx.core.app.ActivityCompat
 
 
 class MainActivity : AppCompatActivity() {
+
+    val PERMISSION_CODE = 100
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -19,6 +24,14 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame, contact)
             .commit()
+
+        if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED){
+            var permissions = arrayOf(
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+            ActivityCompat.requestPermissions(this,permissions,PERMISSION_CODE)
+        }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -47,5 +60,21 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode === PERMISSION_CODE){
+            if (grantResults.size>0){
+                for (grant in grantResults){
+                    if (grant != PackageManager.PERMISSION_GRANTED) System.exit(0)
+                }
+            }
+        }
     }
 }
