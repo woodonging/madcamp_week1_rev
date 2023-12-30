@@ -3,11 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ContactFragment">
+    tools:context=".ContactFragment"
+    android:orientation="vertical">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contact_board"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/contact" />
+        android:scrollbars="vertical"
+        tools:listitem="@layout/contacts"/>
 
 </FrameLayout>
