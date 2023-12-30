@@ -10,6 +10,8 @@ import com.bumptech.glide.Glide
 
 class GalleryImageAdapter(private val imageList: MutableList<GalleryRecyclerModel>):
     RecyclerView.Adapter<GalleryImageAdapter.ImageViewHolder>() {
+
+    private var itemClickListener : OnItemClickListener? = null
     interface OnItemClickListener {
         fun onClick(v: View, position: Int)
     }
@@ -35,6 +37,9 @@ class GalleryImageAdapter(private val imageList: MutableList<GalleryRecyclerMode
                 .load(imageModel.image)
                 .into(holder.imageView)
         }
+        holder.itemView.setOnClickListener {
+            itemClickListener?.onClick(it, position)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -44,7 +49,5 @@ class GalleryImageAdapter(private val imageList: MutableList<GalleryRecyclerMode
     fun setItemClickListener(onItemClickListener: OnItemClickListener) {
         this.itemClickListener = onItemClickListener
     }
-
-    private lateinit var itemClickListener : OnItemClickListener
 
 }

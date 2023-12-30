@@ -1,6 +1,7 @@
 package com.example.madcamp_week1_rev
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,8 +17,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.net.Uri
-
-
+import android.view.Window
+import com.bumptech.glide.Glide
 
 class GalleryFragment : Fragment() {
 
@@ -26,10 +27,6 @@ class GalleryFragment : Fragment() {
     private lateinit var adapter: GalleryImageAdapter
     private val imageList = mutableListOf<GalleryRecyclerModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        imageList.add(GalleryRecyclerModel(R.drawable.gallery))
-    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,19 +37,20 @@ class GalleryFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = GalleryImageAdapter(imageList)
         recyclerView.adapter = adapter
-
-        val addphotobtn: FloatingActionButton = view.findViewById(R.id.PhotoAddButton)
-
-        addphotobtn.setOnClickListener{
-            addphoto()
-        }
+        imageList.add(GalleryRecyclerModel(R.drawable.gallery))
 
         adapter.setItemClickListener(object: GalleryImageAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
                 Toast.makeText(context, "메시지 내용", Toast.LENGTH_SHORT).show()
+                showImageDialog(imageList[position].image)
             }
         })
 
+        val addphotobtn: FloatingActionButton = view.findViewById(R.id.PhotoAddButton)
+        addphotobtn.setOnClickListener{
+            addphoto()
+        }
+        
         return view
     }
 
@@ -73,9 +71,28 @@ class GalleryFragment : Fragment() {
             }
         }
     }
-
     private fun addImageToRecyclerView(imageUri: Uri) {
         imageList.add(GalleryRecyclerModel(imageUri))
         adapter.notifyDataSetChanged()
+    }
+
+    private fun showImageDialog(image: Any) {
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_bigimage)
+
+        val imageView = dialog.findViewById<ImageView>(R.id.dialogImageView)
+
+        if (image is Int) {
+            Glide.with(requireContext())
+                .load(image)
+                .into(imageView)
+        } else if (image is Uri) {
+            Glide.with(requireContext())
+                .load(image)
+                .into(imageView)
+        }
+
+        dialog.show()
     }
 }
