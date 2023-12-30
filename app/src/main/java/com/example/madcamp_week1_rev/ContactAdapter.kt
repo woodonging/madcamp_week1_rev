@@ -23,6 +23,19 @@ class ContactAdapter(private val contactList: ArrayList<Contact>) :
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         holder.contact.text = contactList[position].name
+        holder.itemView.setOnClickListener {
+            contactClickListener.onClick(it, position)
+        }
     }
+
+    interface OnContactClickListener{
+        fun onClick(view: View, position: Int)
+    }
+
+    fun setContactClickListener(onContactClickListener: OnContactClickListener){
+        this.contactClickListener = onContactClickListener
+    }
+
+    private lateinit var contactClickListener: OnContactClickListener
 
 }

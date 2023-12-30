@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode === PERMISSION_CODE){
-            if (grantResults.size>0){
+            if (grantResults.isNotEmpty()){
                 for (grant in grantResults){
                     if (grant != PackageManager.PERMISSION_GRANTED) System.exit(0)
                 }
