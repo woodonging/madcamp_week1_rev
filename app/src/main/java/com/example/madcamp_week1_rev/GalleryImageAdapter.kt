@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 class GalleryImageAdapter(private val imageList: ArrayList<GalleryRecyclerModel>):
     RecyclerView.Adapter<GalleryImageAdapter.ImageViewHolder>() {
+    interface OnItemClickListener {
+        fun onClick(v: View, position: Int)
+    }
 
     class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.gallery_imageView)
@@ -22,14 +25,19 @@ class GalleryImageAdapter(private val imageList: ArrayList<GalleryRecyclerModel>
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val imageModel = imageList[position]
         holder.imageView.setImageResource(imageModel.image)
+        holder.itemView.setOnClickListener {
+            itemClickListener.onClick(it, position)
+        }
     }
 
     override fun getItemCount(): Int {
         return imageList.size
     }
 
+    fun setItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.itemClickListener = onItemClickListener
+    }
 
-
-
+    private lateinit var itemClickListener : OnItemClickListener
 
 }
