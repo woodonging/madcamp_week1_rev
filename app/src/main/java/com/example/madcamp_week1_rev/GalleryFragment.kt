@@ -82,17 +82,9 @@ class GalleryFragment : Fragment() {
         dialog.setContentView(R.layout.dialog_bigimage)
 
         val imageView = dialog.findViewById<ImageView>(R.id.dialogImageView)
-
-        if (image is Int) {
-            Glide.with(requireContext())
-                .load(image)
-                .into(imageView)
-        } else if (image is Uri) {
-            Glide.with(requireContext())
-                .load(image)
-                .into(imageView)
-        }
-
+            Glide.with(requireContext()).load(image).into(imageView)
         dialog.show()
     }
+
+
 }
