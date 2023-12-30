@@ -37,12 +37,16 @@ class GalleryFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = GalleryImageAdapter(imageList)
         recyclerView.adapter = adapter
-        imageList.add(GalleryRecyclerModel(R.drawable.gallery))
 
         adapter.setItemClickListener(object: GalleryImageAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
-                Toast.makeText(context, "메시지 내용", Toast.LENGTH_SHORT).show()
                 showImageDialog(imageList[position].image)
+            }
+        })
+
+        adapter.setItemLongClickListener(object : GalleryImageAdapter.OnItemLongClickListener {
+            override fun onLongClick(position: Int) {
+                showDeleteDialog(position)
             }
         })
 
@@ -82,9 +86,24 @@ class GalleryFragment : Fragment() {
         dialog.setContentView(R.layout.dialog_bigimage)
 
         val imageView = dialog.findViewById<ImageView>(R.id.dialogImageView)
-            Glide.with(requireContext()).load(image).into(imageView)
+        Glide.with(requireContext()).load(image).into(imageView)
         dialog.show()
     }
 
+    private fun showDeleteDialog(position: Int) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("삭제 확인")
+        builder.setMessage("이미지를 삭제하시겠습니까?")
 
+        builder.setPositiveButton("삭제") { _, _ ->
+            (recyclerView.adapter as GalleryImageAdapter).removeItem(position)
+            adapter.notifyDataSetChanged()
+        }
+
+        builder.setNegativeButton("취소") { _, _ ->
+            // 사용자가 취소를 선택한 경우 아무것도 하지 않음
+        }
+
+        builder.show()
+    }
 }
