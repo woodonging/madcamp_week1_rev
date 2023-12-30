@@ -37,6 +37,13 @@ android {
         viewBinding = true
         dataBinding = true
     }
+    sourceSets {
+        getByName("main") {
+            assets {
+                srcDirs("src/main/assets")
+            }
+        }
+    }
 }
 
 dependencies {
