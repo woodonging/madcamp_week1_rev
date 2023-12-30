@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.net.Uri
 import android.view.Window
+import android.widget.TextView
 import com.bumptech.glide.Glide
 
 class GalleryFragment : Fragment() {
@@ -25,6 +26,7 @@ class GalleryFragment : Fragment() {
     private val PICK_IMAGE_REQUEST_CODE = 2000
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: GalleryImageAdapter
+    private lateinit var emptyview: TextView
     private val imageList = mutableListOf<GalleryRecyclerModel>()
 
     override fun onCreateView(
@@ -37,12 +39,17 @@ class GalleryFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = GalleryImageAdapter(imageList)
         recyclerView.adapter = adapter
-        imageList.add(GalleryRecyclerModel(R.drawable.gallery))
+        emptyview = view.findViewById(R.id.emptygallery)
 
         adapter.setItemClickListener(object: GalleryImageAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
-                Toast.makeText(context, "메시지 내용", Toast.LENGTH_SHORT).show()
                 showImageDialog(imageList[position].image)
+            }
+        })
+
+        adapter.setItemLongClickListener(object : GalleryImageAdapter.OnItemLongClickListener {
+            override fun onLongClick(position: Int) {
+                showDeleteDialog(position)
             }
         })
 
@@ -50,8 +57,17 @@ class GalleryFragment : Fragment() {
         addphotobtn.setOnClickListener{
             addphoto()
         }
-        
+        /*imageList.add(GalleryRecyclerModel(R.drawable.gallery)) //버츄얼 테스트를 위한 샘플 나중에 꼭 삭제하기!*/
+        isempty()
         return view
+    }
+
+    private fun isempty(){
+        if (imageList.size<=0) {
+            emptyview.visibility = View.VISIBLE // 표시
+        } else {
+            emptyview.visibility = View.GONE // 숨김
+        }
     }
 
     private fun addphoto() {
@@ -74,25 +90,38 @@ class GalleryFragment : Fragment() {
     private fun addImageToRecyclerView(imageUri: Uri) {
         imageList.add(GalleryRecyclerModel(imageUri))
         adapter.notifyDataSetChanged()
+        isempty()
     }
 
     private fun showImageDialog(image: Any) {
+        val zoomableDialog = ZoomableImageDialog(requireContext(), image)
+        zoomableDialog.show()
+    }
+  /*  private fun showImageDialog(image: Any) {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_bigimage)
 
         val imageView = dialog.findViewById<ImageView>(R.id.dialogImageView)
+        Glide.with(requireContext()).load(image).into(imageView)
+        dialog.show()
+    }*/
 
-        if (image is Int) {
-            Glide.with(requireContext())
-                .load(image)
-                .into(imageView)
-        } else if (image is Uri) {
-            Glide.with(requireContext())
-                .load(image)
-                .into(imageView)
+    private fun showDeleteDialog(position: Int) {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("삭제 확인")
+        builder.setMessage("이미지를 삭제하시겠습니까?")
+
+        builder.setPositiveButton("삭제") { _, _ ->
+            (recyclerView.adapter as GalleryImageAdapter).removeItem(position)
+            adapter.notifyDataSetChanged()
+            isempty()
         }
 
-        dialog.show()
+        builder.setNegativeButton("취소") { _, _ ->
+            // 사용자가 취소를 선택한 경우 아무것도 하지 않음
+        }
+
+        builder.show()
     }
 }

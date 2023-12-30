@@ -12,8 +12,13 @@ class GalleryImageAdapter(private val imageList: MutableList<GalleryRecyclerMode
     RecyclerView.Adapter<GalleryImageAdapter.ImageViewHolder>() {
 
     private var itemClickListener : OnItemClickListener? = null
+    private var longClickListener: OnItemLongClickListener? = null
     interface OnItemClickListener {
         fun onClick(v: View, position: Int)
+    }
+
+    interface OnItemLongClickListener {
+        fun onLongClick(position: Int)
     }
 
     class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -40,6 +45,11 @@ class GalleryImageAdapter(private val imageList: MutableList<GalleryRecyclerMode
         holder.itemView.setOnClickListener {
             itemClickListener?.onClick(it, position)
         }
+
+        holder.itemView.setOnLongClickListener {
+            longClickListener?.onLongClick(position)
+            true
+        }
     }
 
     override fun getItemCount(): Int {
@@ -50,4 +60,12 @@ class GalleryImageAdapter(private val imageList: MutableList<GalleryRecyclerMode
         this.itemClickListener = onItemClickListener
     }
 
+    fun setItemLongClickListener(onItemLongClickListener: OnItemLongClickListener) {
+        this.longClickListener = onItemLongClickListener
+    }
+
+    fun removeItem(position: Int) {
+        imageList.removeAt(position)
+        notifyItemRemoved(position)
+    }
 }
