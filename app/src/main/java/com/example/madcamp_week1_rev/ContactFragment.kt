@@ -1,10 +1,12 @@
 package com.example.madcamp_week1_rev
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONArray
@@ -48,6 +50,17 @@ class ContactFragment : Fragment() {
         }
         contactList.sortBy { it.name }
         val contactAdapter = ContactAdapter(contactList)
+
+        contactAdapter.setContactClickListener(object: ContactAdapter.OnContactClickListener{
+            override fun onClick(view: View, position: Int){
+                val details = ContactDetailFragment.newInstance(contactList[position])
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+
+                transaction.replace(R.id.frame, details)
+                transaction.addToBackStack(null)
+                transaction.commit()
+            }
+        })
 
         contactAdapter.notifyDataSetChanged()
         contacts.adapter = contactAdapter
