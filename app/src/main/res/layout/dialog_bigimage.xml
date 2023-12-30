@@ -8,8 +8,14 @@
     <ImageView
         android:id="@+id/dialogImageView"
         android:layout_width="match_parent"
-        android:layout_height="294dp"
+        android:layout_height="413dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter" />
+
+    <ImageButton
+        android:id="@+id/closeButton"
+        android:layout_width="28dp"
+        android:layout_height="31dp"
+        android:src="@drawable/ic_close_button" />
 
 </RelativeLayout>

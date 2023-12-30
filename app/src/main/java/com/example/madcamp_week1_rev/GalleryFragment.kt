@@ -54,7 +54,7 @@ class GalleryFragment : Fragment() {
         addphotobtn.setOnClickListener{
             addphoto()
         }
-        
+        imageList.add(GalleryRecyclerModel(R.drawable.gallery))
         return view
     }
 
@@ -81,6 +81,10 @@ class GalleryFragment : Fragment() {
     }
 
     private fun showImageDialog(image: Any) {
+        val zoomableDialog = ZoomableImageDialog(requireContext(), image)
+        zoomableDialog.show()
+    }
+  /*  private fun showImageDialog(image: Any) {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.dialog_bigimage)
@@ -88,7 +92,7 @@ class GalleryFragment : Fragment() {
         val imageView = dialog.findViewById<ImageView>(R.id.dialogImageView)
         Glide.with(requireContext()).load(image).into(imageView)
         dialog.show()
-    }
+    }*/
 
     private fun showDeleteDialog(position: Int) {
         val builder = AlertDialog.Builder(requireContext())
