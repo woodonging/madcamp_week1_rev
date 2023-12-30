@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.net.Uri
 import android.view.Window
+import android.widget.TextView
 import com.bumptech.glide.Glide
 
 class GalleryFragment : Fragment() {
@@ -25,6 +26,7 @@ class GalleryFragment : Fragment() {
     private val PICK_IMAGE_REQUEST_CODE = 2000
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: GalleryImageAdapter
+    private lateinit var emptyview: TextView
     private val imageList = mutableListOf<GalleryRecyclerModel>()
 
     override fun onCreateView(
@@ -37,6 +39,7 @@ class GalleryFragment : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         adapter = GalleryImageAdapter(imageList)
         recyclerView.adapter = adapter
+        emptyview = view.findViewById(R.id.emptygallery)
 
         adapter.setItemClickListener(object: GalleryImageAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
@@ -54,8 +57,17 @@ class GalleryFragment : Fragment() {
         addphotobtn.setOnClickListener{
             addphoto()
         }
-        imageList.add(GalleryRecyclerModel(R.drawable.gallery))
+        /*imageList.add(GalleryRecyclerModel(R.drawable.gallery)) //버츄얼 테스트를 위한 샘플 나중에 꼭 삭제하기!*/
+        isempty()
         return view
+    }
+
+    private fun isempty(){
+        if (imageList.size<=0) {
+            emptyview.visibility = View.VISIBLE // 표시
+        } else {
+            emptyview.visibility = View.GONE // 숨김
+        }
     }
 
     private fun addphoto() {
@@ -78,6 +90,7 @@ class GalleryFragment : Fragment() {
     private fun addImageToRecyclerView(imageUri: Uri) {
         imageList.add(GalleryRecyclerModel(imageUri))
         adapter.notifyDataSetChanged()
+        isempty()
     }
 
     private fun showImageDialog(image: Any) {
@@ -102,6 +115,7 @@ class GalleryFragment : Fragment() {
         builder.setPositiveButton("삭제") { _, _ ->
             (recyclerView.adapter as GalleryImageAdapter).removeItem(position)
             adapter.notifyDataSetChanged()
+            isempty()
         }
 
         builder.setNegativeButton("취소") { _, _ ->
