@@ -1,21 +1,23 @@
 package com.example.madcamp_week1_rev
 
-import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONArray
-import org.json.JSONObject
 import java.io.BufferedReader
-import java.io.InputStream
 import java.io.InputStreamReader
 
 class ContactFragment : Fragment() {
+
+    private lateinit var contactAdapter: ContactAdapter
+    private lateinit var contactList: ArrayList<Contact>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -25,20 +27,9 @@ class ContactFragment : Fragment() {
         val contacts = inflatedView.findViewById<RecyclerView>(R.id.contact_board)
         val jsonArrayString = readAssetJsonFile("contacts.json")
         val jsonArray = JSONArray(jsonArrayString)
-        var contactList = ArrayList<Contact>()
 
-//        contactList.add(Contact("a","a",""))
-//        contactList.add(Contact("b","b",""))
-//        contactList.add(Contact("c","c",""))
-//        contactList.add(Contact("d","d",""))
-//        contactList.add(Contact("a","e",""))
-//        contactList.add(Contact("b","f",""))
-//        contactList.add(Contact("c","g",""))
-//        contactList.add(Contact("d","a",""))
-//        contactList.add(Contact("a","b",""))
-//        contactList.add(Contact("b","c",""))
-//        contactList.add(Contact("c","d",""))
-//        contactList.add(Contact("d","e",""))
+        contactList = ArrayList()
+
         for (i in 0 until jsonArray.length()){
             val jsonObject = jsonArray.getJSONObject(i)
 
@@ -49,11 +40,11 @@ class ContactFragment : Fragment() {
             contactList.add(Contact(name, phone, information))
         }
         contactList.sortBy { it.name }
-        val contactAdapter = ContactAdapter(contactList)
+        this.contactAdapter = ContactAdapter(contactList)
 
         contactAdapter.setContactClickListener(object: ContactAdapter.OnContactClickListener{
             override fun onClick(view: View, position: Int){
-                val details = ContactDetailFragment.newInstance(contactList[position])
+                val details = ContactDetailFragment.newInstance(contactAdapter.contactList[position])
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
 
                 transaction.replace(R.id.frame, details)
@@ -61,11 +52,24 @@ class ContactFragment : Fragment() {
                 transaction.commit()
             }
         })
+        val searchEdit = inflatedView.findViewById<EditText>(R.id.search)
 
-        contactAdapter.notifyDataSetChanged()
+        searchEdit.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(edit: Editable?){
+                searchEdit.isCursorVisible = edit.toString().isNotEmpty()
+                filterData(edit.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
+
         contacts.adapter = contactAdapter
         contacts.layoutManager = LinearLayoutManager(this.context)
-
+        contactAdapter.notifyDataSetChanged()
         return inflatedView
     }
 
@@ -81,6 +85,18 @@ class ContactFragment : Fragment() {
         }
         reader.close()
         return stringBuilder.toString()
+    }
+
+    private fun filterData(query: String?){
+        this.contactAdapter.contactList = contactList
+        if (query.isNullOrBlank()){
+            this.contactAdapter.contactList = contactList
+        }
+        else{
+            val filteredList = this.contactAdapter.contactList.filter{ contact -> query in contact.name}
+            this.contactAdapter.contactList = filteredList as ArrayList<Contact>
+        }
+        this.contactAdapter.notifyDataSetChanged()
     }
 
 }

@@ -3,10 +3,11 @@ package com.example.madcamp_week1_rev
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ContactAdapter(private val contactList: ArrayList<Contact>) :
+class ContactAdapter(var contactList: ArrayList<Contact>) :
     RecyclerView.Adapter<ContactAdapter.ContactViewHolder>(){
 
     class ContactViewHolder(view: View): RecyclerView.ViewHolder(view){
