@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import com.example.madcamp_week1_rev.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import androidx.core.app.ActivityCompat
+import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val file = File(getExternalFilesDir(null), "test.txt")
         val contact: Fragment = ContactFragment()
         val gallery: Fragment = GalleryFragment()
         val memo: Fragment = MemoFragment()

@@ -13,12 +13,21 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.net.Uri
+import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MotionEvent
 import android.widget.TextView
+import androidx.core.content.FileProvider
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class GalleryFragment : Fragment() {
 
+    private var currentPhotoPath: String? = null
     private val addfromgallerycode = 100
     private val addbycameracode = 200
     private lateinit var recyclerView: RecyclerView
@@ -27,6 +36,8 @@ class GalleryFragment : Fragment() {
     private lateinit var gallerybutton: FloatingActionButton
     private lateinit var camerabutton: FloatingActionButton
     private val imageList = mutableListOf<GalleryRecyclerModel>()
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -86,7 +97,22 @@ class GalleryFragment : Fragment() {
 
     private fun addbycamera() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(cameraIntent, addbycameracode)
+        // 이미지를 저장할 파일 생성
+        val photoFile: File? = try {
+            createImageFile()
+        } catch (ex: IOException) {
+            null
+        }
+        // 파일이 정상적으로 생성되면 카메라 앱에 파일을 저장할 수 있는 URI를 제공
+        photoFile?.also {
+            val photoURI: Uri = FileProvider.getUriForFile(
+                requireContext(),
+                "com.example.madcamp_week1_rev.fileprovider",
+                it
+            )
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+            startActivityForResult(cameraIntent, addbycameracode)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -101,9 +127,9 @@ class GalleryFragment : Fragment() {
         }
 
         if (requestCode == addbycameracode && resultCode == Activity.RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            if (imageBitmap != null) {
-                addImageToRecyclerView(imageBitmap)
+            currentPhotoPath?.let { path ->
+                val imageFile = File(path)
+                addImageToRecyclerView(Uri.fromFile(imageFile))
             }
         }
 
@@ -135,5 +161,23 @@ class GalleryFragment : Fragment() {
         }
 
         builder.show()
+    }
+
+    private fun createImageFile(): File {
+        try {
+            val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val storageDir: File? = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            val imageFile = File.createTempFile(
+                "JPEG_${timeStamp}_",
+                ".jpg",
+                storageDir
+            )
+            // 파일 경로 저장
+            currentPhotoPath = imageFile.absolutePath
+            return imageFile
+        } catch (ex: IOException) {
+            Log.e("GalleryFragment", "Error creating image file", ex)
+            throw ex
+        }
     }
 }
