@@ -26,13 +26,16 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED /*||
+            != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(this,android.Manifest.permission.CAMERA)
-            != PackageManager.PERMISSION_GRANTED*/
-
+            != PackageManager.PERMISSION_GRANTED
             ){
             var permissions = arrayOf(
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA
             )
             ActivityCompat.requestPermissions(this,permissions,PERMISSION_CODE)
         }
