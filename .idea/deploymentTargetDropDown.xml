@@ -7,11 +7,11 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\emoti\.android\avd\Permission_test.avd" />
+            <value value="C:\Users\emoti\.android\avd\Pixel_2_API_30_1.avd" />
           </Key>
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2023-12-31T04:52:27.781581100Z" />
+    <timeTargetWasSelectedWithDropDown value="2023-12-31T12:06:23.901110200Z" />
   </component>
 </project>

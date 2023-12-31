@@ -1,5 +1,6 @@
 package com.example.madcamp_week1_rev
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -33,22 +34,19 @@ class GalleryImageAdapter(private val imageList: MutableList<GalleryRecyclerMode
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val imageModel = imageList[position]
-        if (imageModel.image is Int) {
+        if (imageModel.image is Int || imageModel.image is Uri || imageModel.image is Bitmap) {
             Glide.with(holder.itemView.context)
                 .load(imageModel.image)
                 .into(holder.imageView)
-        } else if (imageModel.image is Uri) {
-            Glide.with(holder.itemView.context)
-                .load(imageModel.image)
-                .into(holder.imageView)
-        }
-        holder.itemView.setOnClickListener {
-            itemClickListener?.onClick(it, position)
-        }
 
-        holder.itemView.setOnLongClickListener {
-            longClickListener?.onLongClick(position)
-            true
+            holder.itemView.setOnClickListener {
+                itemClickListener?.onClick(it, position)
+            }
+
+            holder.itemView.setOnLongClickListener {
+                longClickListener?.onLongClick(position)
+                true
+            }
         }
     }
 

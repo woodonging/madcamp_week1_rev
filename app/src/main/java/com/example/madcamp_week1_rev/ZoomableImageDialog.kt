@@ -2,6 +2,7 @@ package com.example.madcamp_week1_rev
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Matrix
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -14,6 +15,7 @@ class ZoomableImageDialog(context: Context, private val imageUrl: Any) : Dialog(
 
     private lateinit var imageView: ImageView
     private lateinit var scaleGestureDetector: ScaleGestureDetector
+    private lateinit var matrix: Matrix
     private var scaleFactor = 1.0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,18 +26,18 @@ class ZoomableImageDialog(context: Context, private val imageUrl: Any) : Dialog(
         imageView = findViewById(R.id.dialogImageView)
         scaleGestureDetector = ScaleGestureDetector(context, ScaleListener())
 
-        // 이미지 로딩
         Glide.with(context).load(imageUrl).into(imageView)
 
         val closeButton: ImageButton = findViewById(R.id.closeButton)
         closeButton.setOnClickListener {
-            dismiss() // 다이얼로그를 닫습니다.
+            dismiss()
         }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         // ScaleGestureDetector로부터 이벤트 전달
         scaleGestureDetector.onTouchEvent(event)
+
         return true
     }
 
