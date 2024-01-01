@@ -27,7 +27,7 @@ class GalleryFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: GalleryImageAdapter
     private lateinit var emptyview: TextView
-    private val imageList = mutableListOf<GalleryRecyclerModel>()
+        private val imageList = mutableListOf<GalleryRecyclerModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

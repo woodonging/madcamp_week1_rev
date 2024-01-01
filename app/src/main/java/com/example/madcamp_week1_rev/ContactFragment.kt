@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONArray
@@ -17,34 +18,52 @@ import java.io.InputStreamReader
 class ContactFragment : Fragment() {
 
     private lateinit var contactAdapter: ContactAdapter
-    private lateinit var contactList: ArrayList<Contact>
+    private lateinit var contactViewModel : ContactViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val inflatedView = inflater.inflate(R.layout.fragment_contact, container, false)
-        val contacts = inflatedView.findViewById<RecyclerView>(R.id.contact_board)
-        val jsonArrayString = readAssetJsonFile("contacts.json")
-        val jsonArray = JSONArray(jsonArrayString)
+        contactViewModel = ViewModelProvider(requireActivity()).get(ContactViewModel::class.java)
+        if (contactViewModel.getContactList().isEmpty())
+        {
+            val inputStream = requireActivity().assets.open("contacts.json")
+            val reader = BufferedReader(InputStreamReader(inputStream))
+            val stringBuilder = StringBuilder()
+            var line: String?
+            while(reader.readLine().also {line = it} != null)
+            {
+                stringBuilder.append(line)
+            }
+            reader.close()
+            val jsonArrayString = stringBuilder.toString()
+            val jsonArray = JSONArray(jsonArrayString)
+            for (i in 0 until jsonArray.length()){
+                val jsonObject = jsonArray.getJSONObject(i)
+                val name = jsonObject.getString("name")
+                val phone = jsonObject.getString("phone")
+                val information = jsonObject.getString("information")
 
-        contactList = ArrayList()
-
-        for (i in 0 until jsonArray.length()){
-            val jsonObject = jsonArray.getJSONObject(i)
-
-            val name = jsonObject.getString("name")
-            val phone = jsonObject.getString("phone")
-            val information = jsonObject.getString("information")
-
-            contactList.add(Contact(name, phone, information))
+                contactViewModel.addContact(Contact(name, phone, information))
+            }
         }
-        contactList.sortBy { it.name }
+
+
+        return inflatedView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val contacts = view.findViewById<RecyclerView>(R.id.contact_board)
+
+        var contactList = contactViewModel.getContactList()
         this.contactAdapter = ContactAdapter(contactList)
 
         contactAdapter.setContactClickListener(object: ContactAdapter.OnContactClickListener{
-            override fun onClick(view: View, position: Int){
-                val details = ContactDetailFragment.newInstance(contactAdapter.contactList[position])
+            override fun onClick(view: View, contact: Contact){
+                var position = contactViewModel.findPosition(contact.name, contact.phone, contact.information)
+                val details = ContactDetailFragment.newInstance(position)
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
 
                 transaction.replace(R.id.frame, details)
@@ -52,7 +71,7 @@ class ContactFragment : Fragment() {
                 transaction.commit()
             }
         })
-        val searchEdit = inflatedView.findViewById<EditText>(R.id.search)
+        val searchEdit = view.findViewById<EditText>(R.id.search)
 
         searchEdit.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(edit: Editable?){
@@ -70,31 +89,14 @@ class ContactFragment : Fragment() {
         contacts.adapter = contactAdapter
         contacts.layoutManager = LinearLayoutManager(this.context)
         contactAdapter.notifyDataSetChanged()
-        return inflatedView
     }
-
-    private fun readAssetJsonFile(fileName: String): String {
-        val assetManager = requireContext().assets
-        val inputStream = assetManager.open(fileName)
-        val reader = BufferedReader(InputStreamReader(inputStream))
-        val stringBuilder = StringBuilder()
-        var line: String?
-        while(reader.readLine().also {line = it} != null)
-        {
-            stringBuilder.append(line)
-        }
-        reader.close()
-        return stringBuilder.toString()
-    }
-
     private fun filterData(query: String?){
-        this.contactAdapter.contactList = contactList
+        this.contactAdapter.contactList = contactViewModel.getContactList()
         if (query.isNullOrBlank()){
-            this.contactAdapter.contactList = contactList
+            this.contactAdapter.contactList = contactViewModel.getContactList()
         }
         else{
-            val filteredList = this.contactAdapter.contactList.filter{ contact -> query in contact.name}
-            this.contactAdapter.contactList = filteredList as ArrayList<Contact>
+            this.contactAdapter.contactList = contactViewModel.getContactList().filter{ contact -> query in contact.name } as ArrayList<Contact>
         }
         this.contactAdapter.notifyDataSetChanged()
     }
