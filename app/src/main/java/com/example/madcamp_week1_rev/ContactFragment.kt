@@ -77,6 +77,7 @@ class ContactFragment : Fragment() {
             override fun afterTextChanged(edit: Editable?){
                 searchEdit.isCursorVisible = edit.toString().isNotEmpty()
                 filterData(edit.toString())
+
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
