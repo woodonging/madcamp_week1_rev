@@ -31,15 +31,15 @@ class WeatherData{
         if (condition in 200..299) {
             return "thunderstorm"
         } else if (condition in 300..499) {
-            return "lightrain"
+            return "rain" //lightrain
         } else if (condition in 500..599) {
             return "rain"
         } else if (condition in 600..700) {
             return "snow"
         } else if (condition in 701..771) {
-            return "fog"
+            return "cloudy" //fog
         } else if (condition in 772..799) {
-            return "overcast"
+            return "cloudy" //overcast
         } else if (condition == 800) {
             return "clear"
         } else if (condition in 801..804) {
