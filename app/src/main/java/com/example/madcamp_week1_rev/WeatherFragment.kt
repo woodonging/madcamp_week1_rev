@@ -39,7 +39,8 @@ class WeatherFragment : Fragment() {
     private lateinit var cityName: TextView
     private lateinit var currentTemp: TextView
     private lateinit var weatherDescription: TextView
-    private lateinit var minMaxTemp: TextView
+    private lateinit var minTemp: TextView
+    private lateinit var maxTemp: TextView
     private lateinit var weatherIcon: ImageView
 
 
@@ -55,7 +56,8 @@ class WeatherFragment : Fragment() {
         cityName = view.findViewById(R.id.cityName)
         currentTemp = view.findViewById(R.id.currentTemp)
         weatherDescription = view.findViewById(R.id.weatherDescription)
-        minMaxTemp = view.findViewById(R.id.minMaxTemp)
+        minTemp = view.findViewById(R.id.minTemp)
+        maxTemp = view.findViewById(R.id.maxTemp)
         weatherIcon = view.findViewById(R.id.weatherIcon)
 
         return view
@@ -113,7 +115,17 @@ class WeatherFragment : Fragment() {
     }
 
     private fun updateWeather(weather: WeatherData) {
-        currentTemp.setText(weather.tempString+" ℃")
+
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        val addresses = geocoder.getFromLocation(weather.latstring.toDouble() ?: 0.0, weather.lonstring.toDouble() ?: 0.0, 1)
+        if (addresses != null) {
+            val city = addresses[0]?.adminArea //subLocality로 하면 유성구로 출력 현재는 대전광역시
+            cityName.setText(city)
+        }
+
+        minTemp.setText("Min :"+weather.tempminString+" ℃")
+        maxTemp.setText("Max :"+weather.tempmaxString+" ℃")
+        currentTemp.setText("Current :"+weather.tempString+" ℃")
         weatherDescription.setText(weather.weatherType)
         val resourceID = resources.getIdentifier(weather.icon, "drawable", activity?.packageName)
         weatherIcon.setImageResource(resourceID)

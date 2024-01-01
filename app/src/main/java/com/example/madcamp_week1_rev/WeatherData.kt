@@ -1,15 +1,19 @@
 package com.example.madcamp_week1_rev
 
+import android.location.Geocoder
 import org.json.JSONException
 import org.json.JSONObject
 
 class WeatherData{
 
     lateinit var tempString: String
+    lateinit var tempmaxString: String
+    lateinit var tempminString: String
     lateinit var icon: String
     lateinit var weatherType: String
+    lateinit var latstring: String
+    lateinit var lonstring: String
     private var weatherId: Int = 0
-    private var tempInt: Int =0
 
     fun fromJson(jsonObject: JSONObject?): WeatherData? {
         try{
@@ -17,9 +21,17 @@ class WeatherData{
             weatherData.weatherId = jsonObject?.getJSONArray("weather")?.getJSONObject(0)?.getInt("id")!!
             weatherData.weatherType = jsonObject.getJSONArray("weather").getJSONObject(0).getString("main")
             weatherData.icon = updateWeatherIcon(weatherData.weatherId)
-            val roundedTemp: Int = (jsonObject.getJSONObject("main").getDouble("temp")-273.15).toInt()
+            val lat: Double = (jsonObject.getJSONObject("coord").getDouble("lat"))
+            val lon: Double = (jsonObject.getJSONObject("coord").getDouble("lon"))
+            val roundedTemp: Double = (jsonObject.getJSONObject("main").getDouble("temp")-273.15)
+            val roundedTempmax: Double = (jsonObject.getJSONObject("main").getDouble("temp_max")-273.15)
+            val roundedTempmin: Double = (jsonObject.getJSONObject("main").getDouble("temp_min")-273.15)
+
+            weatherData.latstring = lat.toString()
+            weatherData.lonstring = lon.toString()
             weatherData.tempString = roundedTemp.toString()
-            weatherData.tempInt = roundedTemp
+            weatherData.tempmaxString = roundedTempmax.toString()
+            weatherData.tempminString = roundedTempmin.toString()
             return weatherData
         }catch (e: JSONException){
             e.printStackTrace()
