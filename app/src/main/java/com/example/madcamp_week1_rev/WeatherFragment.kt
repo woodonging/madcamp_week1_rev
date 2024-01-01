@@ -1,6 +1,9 @@
 package com.example.madcamp_week1_rev
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,14 +15,36 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.location.LocationServices
 import android.location.Geocoder
+import android.location.LocationListener
+import android.location.LocationManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import com.loopj.android.http.AsyncHttpClient
+import com.loopj.android.http.JsonHttpResponseHandler
+import com.loopj.android.http.RequestParams
+import okhttp3.internal.http2.Header
+import org.json.JSONObject
 import java.util.Locale
 
 
 class WeatherFragment : Fragment() {
+    companion object {
+        const val API_KEY: String = "02b795871d7cd0e1db5cdc9a3e411f25"
+        const val WEATHER_URL: String = "https://api.openweathermap.org/data/2.5/weather"
+        const val MIN_TIME: Long = 5000
+        const val MIN_DISTANCE: Float = 1000F
+        const val WEATHER_REQUEST: Int = 102
+    }
 
-    private var lat: Double? = null
-    private var lon: Double? = null
+    private lateinit var cityName: TextView
+    private lateinit var currentTemp: TextView
+    private lateinit var weatherDescription: TextView
+    private lateinit var minMaxTemp: TextView
+    private lateinit var weatherIcon: ImageView
+
+
+    private lateinit var mLocationManager: LocationManager
+    private lateinit var mLocationListener: LocationListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,52 +52,77 @@ class WeatherFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_weather, container, false)
 
-        val cityName: TextView = view.findViewById(R.id.cityName)
-        val currentTemp: TextView = view.findViewById(R.id.currentTemp)
-        val weatherDescription: TextView = view.findViewById(R.id.weatherDescription)
-        val minMaxTemp: TextView = view.findViewById(R.id.minMaxTemp)
-        val weatherIcon: ImageView = view.findViewById(R.id.weatherIcon)
-
-        getLocation(cityName)
+        cityName = view.findViewById(R.id.cityName)
+        currentTemp = view.findViewById(R.id.currentTemp)
+        weatherDescription = view.findViewById(R.id.weatherDescription)
+        minMaxTemp = view.findViewById(R.id.minMaxTemp)
+        weatherIcon = view.findViewById(R.id.weatherIcon)
 
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
-        var city = "Seoul"
-        val apikey = "2bf8bc56daf6323b543d99a2885461ed"
-        var lang = "kr"
-
-        var weatherURL = "https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apikey}&lang&units=metric"
-        val MIN_TIME: Long = 5000
-        val MIN_DISTANCE: Float = 1000F
+    override fun onResume() {
+        super.onResume()
+        getWeatherInCurrentLocation()
     }
 
-    @SuppressLint("MissingPermission")
-    private fun getLocation(cityName: TextView) {
-        val fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(requireActivity())
+    private fun getWeatherInCurrentLocation(){
+        mLocationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        fusedLocationProviderClient.getCurrentLocation(100, null)
-            .addOnSuccessListener { success: Location? ->
-                success?.let { location ->
-                    lat = location.latitude
-                    lon = location.longitude
+        mLocationListener = LocationListener { p0 ->
+            val params: RequestParams = RequestParams()
+            params.put("lat", p0.latitude)
+            params.put("lon", p0.longitude)
+            params.put("appid", Companion.API_KEY)
+            doNetworking(params)
+        }
 
-                    val geocoder = Geocoder(requireContext(), Locale.getDefault())
-                    Log.d("addresses 이전","$lat")
-                    val addresses = geocoder.getFromLocation(lat ?: 0.0, lon ?: 0.0, 1)
-                    Log.d("addresses 이후","$lat")
-                    if (addresses != null) {
-                        val city = addresses[0]?.adminArea //subLocality로 하면 유성구로 출력 현재는 대전광역시
-                        cityName.text = city ?: "Unknown City"
-                    }
+
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, mLocationListener)
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DISTANCE, mLocationListener)
+    }
+
+
+    private fun doNetworking(params: RequestParams) {
+        var client = AsyncHttpClient()
+
+        client.get(WEATHER_URL, params, object: JsonHttpResponseHandler(){
+            override fun onSuccess(
+                statusCode: Int,
+                headers: Array<out cz.msebera.android.httpclient.Header>?,
+                response: JSONObject?
+            ) {
+                val weatherData = WeatherData().fromJson(response)
+                if (weatherData != null) {
+                    updateWeather(weatherData)
                 }
             }
-            .addOnFailureListener { fail ->
-                Toast.makeText(context, "위치 정보 불러오기 실패", Toast.LENGTH_SHORT).show()
-            }
+
+        })
+    }
+
+    private fun updateWeather(weather: WeatherData) {
+        currentTemp.setText(weather.tempString+" ℃")
+        weatherDescription.setText(weather.weatherType)
+        val resourceID = resources.getIdentifier(weather.icon, "drawable", activity?.packageName)
+        weatherIcon.setImageResource(resourceID)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(mLocationManager!=null){
+            mLocationManager.removeUpdates(mLocationListener)
+        }
     }
 }
