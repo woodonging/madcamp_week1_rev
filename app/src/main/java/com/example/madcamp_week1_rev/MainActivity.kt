@@ -4,7 +4,6 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.example.madcamp_week1_rev.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import androidx.core.app.ActivityCompat
 import java.io.File
@@ -21,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         val file = File(getExternalFilesDir(null), "test.txt")
         val contact: Fragment = ContactFragment()
         val gallery: Fragment = GalleryFragment()
-        val memo: Fragment = MemoFragment()
+        val memo: Fragment = WeatherFragment()
         val tabLayout: TabLayout = findViewById(R.id.tabLayout)
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame, contact)
@@ -32,12 +31,21 @@ class MainActivity : AppCompatActivity() {
             ActivityCompat.checkSelfPermission(this,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(this,android.Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this,android.Manifest.permission.INTERNET)
             != PackageManager.PERMISSION_GRANTED
             ){
             var permissions = arrayOf(
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                android.Manifest.permission.CAMERA
+                android.Manifest.permission.CAMERA,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                android.Manifest.permission.INTERNET
             )
             ActivityCompat.requestPermissions(this,permissions,PERMISSION_CODE)
         }
