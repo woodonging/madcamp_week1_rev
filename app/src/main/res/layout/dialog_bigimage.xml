@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="413dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:scaleType="matrix"
         android:background="@drawable/round_rect_shape" />
 
     <ImageButton
