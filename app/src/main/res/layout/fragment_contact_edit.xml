@@ -2,11 +2,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/detailScroll"
+    android:id="@+id/editScroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/darkGray"
-    tools:context=".ContactDetailFragment">
+    tools:context=".ContactEditFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,21 +14,32 @@
         android:background="@color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/pnContainer"
+            android:id="@+id/pnEditContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintHeight_percent="0.4">
+            android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/editButton"
+                android:id="@+id/completeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:backgroundTint="@color/darkGray"
-                android:text="@string/edit"
+                android:text="@string/complete"
                 android:textSize="18sp"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/cancelButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:backgroundTint="@color/darkGray"
+                android:text="@string/cancel"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -42,35 +53,33 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/namePart"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/imageButton"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="20dp"
-                android:paddingBottom="40dp"
-                android:text="@string/defaultMessage"
-                android:textAlignment="center"
-                android:textSize="25sp"
-                android:typeface="normal"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/darkGray"
+                android:text="@string/imageAddition"
+
+                android:textSize="15sp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/profilePart"
-                tools:layout_editor_absoluteY="300dp" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profilePart" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="30dp"
             android:background="@color/darkGray"
             android:orientation="vertical"
             android:padding="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pnContainer">
-
+            app:layout_constraintTop_toBottomOf="@id/pnEditContainer">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/numberPart"
+                android:id="@+id/namePart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/round_rect_shape"
@@ -80,6 +89,38 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
+                    android:id="@+id/nameTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="13dp"
+                    android:text="@string/nameTitle"
+                    android:textSize="18sp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteX="10dp" />
+
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/defaultMessage"
+                    android:textSize="16sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/nameTitle" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/numberPart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/round_rect_shape"
+                android:orientation="vertical"
+                android:padding="15dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/namePart">
+
+                <TextView
                     android:id="@+id/numberTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -87,16 +128,16 @@
                     android:text="@string/numberTitle"
                     android:textSize="18sp"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_editor_absoluteX="10dp" />
+                    tools:layout_editor_absoluteX="15dp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/number"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/defaultMessage"
                     android:textSize="16sp"
-                    app:layout_constraintTop_toBottomOf="@id/numberTitle"
-                    tools:layout_editor_absoluteX="10dp" />
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/numberTitle" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -122,30 +163,16 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:layout_editor_absoluteX="10dp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/memo"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
                     android:text="@string/defaultMessage"
                     android:textSize="16sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/memoTitle" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <Button
-                android:id="@+id/deleteButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/round_rect_shape"
-                android:backgroundTint="#FFFFFF"
-                android:padding="10dp"
-                android:text="@string/deleteMessage"
-                android:textColor="@color/red"
-                android:textSize="18sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/memoPart" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

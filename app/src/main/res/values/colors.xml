@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#e9e9e9</color>
     <color name="search">#dfd9e0</color>
+    <color name="darkGray">#a9a9a9</color>
+    <color name="red">#ED4646</color>
 </resources>

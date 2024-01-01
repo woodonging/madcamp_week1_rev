@@ -25,12 +25,12 @@ class ContactAdapter(var contactList: ArrayList<Contact>) :
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
         holder.contact.text = contactList[position].name
         holder.itemView.setOnClickListener {
-            contactClickListener.onClick(it, position)
+            contactClickListener.onClick(it, contactList[position])
         }
     }
 
     interface OnContactClickListener{
-        fun onClick(view: View, position: Int)
+        fun onClick(view: View, contact: Contact)
     }
 
     fun setContactClickListener(onContactClickListener: OnContactClickListener){
