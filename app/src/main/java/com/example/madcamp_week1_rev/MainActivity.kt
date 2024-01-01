@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import com.example.madcamp_week1_rev.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
 import androidx.core.app.ActivityCompat
+import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val file = File(getExternalFilesDir(null), "test.txt")
         val contact: Fragment = ContactFragment()
         val gallery: Fragment = GalleryFragment()
         val memo: Fragment = MemoFragment()
@@ -26,13 +28,16 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.READ_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED /*||
+            != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(this,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(this,android.Manifest.permission.CAMERA)
-            != PackageManager.PERMISSION_GRANTED*/
-
+            != PackageManager.PERMISSION_GRANTED
             ){
             var permissions = arrayOf(
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA
             )
             ActivityCompat.requestPermissions(this,permissions,PERMISSION_CODE)
         }

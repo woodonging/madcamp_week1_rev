@@ -2,6 +2,7 @@ package com.example.madcamp_week1_rev
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Matrix
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
@@ -14,7 +15,11 @@ class ZoomableImageDialog(context: Context, private val imageUrl: Any) : Dialog(
 
     private lateinit var imageView: ImageView
     private lateinit var scaleGestureDetector: ScaleGestureDetector
+    private lateinit var matrix: Matrix
     private var scaleFactor = 1.0f
+    private var moveX = 0f
+    private var moveY = 0f
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,20 +28,45 @@ class ZoomableImageDialog(context: Context, private val imageUrl: Any) : Dialog(
 
         imageView = findViewById(R.id.dialogImageView)
         scaleGestureDetector = ScaleGestureDetector(context, ScaleListener())
+        matrix = Matrix()
 
-        // 이미지 로딩
+
         Glide.with(context).load(imageUrl).into(imageView)
 
         val closeButton: ImageButton = findViewById(R.id.closeButton)
         closeButton.setOnClickListener {
-            dismiss() // 다이얼로그를 닫습니다.
+            dismiss()
+        }
+
+        imageView.setOnTouchListener { _, event ->
+            handleTouchEvent(event)
+            true
         }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         // ScaleGestureDetector로부터 이벤트 전달
         scaleGestureDetector.onTouchEvent(event)
+
         return true
+    }
+    private fun handleTouchEvent(event: MotionEvent) {
+        scaleGestureDetector.onTouchEvent(event)
+        when (event.action) {
+            MotionEvent.ACTION_MOVE -> {
+                // 이미지뷰 이동
+                val deltaX = event.x - moveX
+                val deltaY = event.y - moveY
+                matrix.postTranslate(deltaX, deltaY)
+                imageView.imageMatrix = matrix
+                moveX = event.x
+                moveY = event.y
+            }
+            MotionEvent.ACTION_DOWN -> {
+                moveX = event.x
+                moveY = event.y
+            }
+        }
     }
 
     private inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
@@ -47,8 +77,8 @@ class ZoomableImageDialog(context: Context, private val imageUrl: Any) : Dialog(
             scaleFactor = if (scaleFactor > 3.0f) 3.0f else scaleFactor // 최대 스케일 제한
 
             // 이미지뷰에 스케일 적용
-            imageView.scaleX = scaleFactor
-            imageView.scaleY = scaleFactor
+            matrix.setScale(scaleFactor, scaleFactor)
+            imageView.imageMatrix = matrix
 
             return true
         }

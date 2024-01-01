@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000000"
+    android:background="@drawable/round_rect_shape"
     android:gravity="center">
 
     <ImageView
@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="413dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter" />
+        android:scaleType="matrix"
+        android:background="@drawable/round_rect_shape" />
 
     <ImageButton
         android:id="@+id/closeButton"
