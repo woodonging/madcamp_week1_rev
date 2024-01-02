@@ -36,9 +36,10 @@ class GalleryFragment : Fragment() {
     private lateinit var adapter: GalleryImageAdapter
     private lateinit var menuButton: ImageButton
     private lateinit var emptyview: TextView
-    private lateinit var gallerybutton: FloatingActionButton
-    private lateinit var camerabutton: FloatingActionButton
+    private lateinit var gallerybutton: ImageButton
+    private lateinit var camerabutton: ImageButton
     private lateinit var galleryViewModel: GalleryViewModel
+    private var isMenuOpen: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,8 +80,17 @@ class GalleryFragment : Fragment() {
         camerabutton = view.findViewById(R.id.CameraButton)
 
         menuButton.setOnClickListener {
-            gallerybutton.visibility = View.VISIBLE
-            camerabutton.visibility = View.VISIBLE
+            if (!isMenuOpen){
+                menuButton.setImageResource(resources.getIdentifier("minus_symbol", "drawable", activity?.packageName))
+                gallerybutton.visibility = View.VISIBLE
+                camerabutton.visibility = View.VISIBLE
+                isMenuOpen=true
+            } else {
+                menuButton.setImageResource(resources.getIdentifier("plus_symbol", "drawable", activity?.packageName))
+                gallerybutton.visibility = View.INVISIBLE
+                camerabutton.visibility = View.INVISIBLE
+                isMenuOpen=false
+            }
         }
 
         gallerybutton.setOnClickListener{

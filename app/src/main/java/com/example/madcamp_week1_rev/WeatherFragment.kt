@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,30 +11,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.w3c.dom.Text
-import com.google.android.gms.location.LocationServices
 import android.location.Geocoder
 import android.location.LocationListener
 import android.location.LocationManager
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.ProgressBar
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
-import androidx.core.view.isInvisible
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
-import okhttp3.internal.http2.Header
 import org.json.JSONObject
+import org.w3c.dom.Text
 import java.util.Locale
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class WeatherFragment : Fragment() {
@@ -44,7 +38,6 @@ class WeatherFragment : Fragment() {
         const val WEATHER_URL: String = "https://api.openweathermap.org/data/2.5/weather"
         const val MIN_TIME: Long = 5000
         const val MIN_DISTANCE: Float = 1000F
-        const val WEATHER_REQUEST: Int = 102
       
         fun newInstance():WeatherFragment{
             return WeatherFragment()
@@ -54,16 +47,19 @@ class WeatherFragment : Fragment() {
     private lateinit var cityName: TextView
     private lateinit var currentTemp: TextView
     private lateinit var weatherDescription: TextView
+    private lateinit var weatherDescriptionLine: TextView
+    private lateinit var currentDate: TextView
+    private lateinit var currentTime: TextView
     private lateinit var minTemp: TextView
     private lateinit var maxTemp: TextView
     private lateinit var weatherIcon: ImageView
     private lateinit var progressBar: ProgressBar
     private lateinit var reload : ImageButton
-
-
+    private lateinit var weatherIconCard : CardView
     private lateinit var mLocationManager: LocationManager
     private lateinit var mLocationListener: LocationListener
     private lateinit var weatherViewModel: WeatherViewModel
+    private lateinit var currentTempDiscription: TextView
     private lateinit var validation : MutableLiveData<Boolean>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,12 +77,20 @@ class WeatherFragment : Fragment() {
         cityName = view.findViewById(R.id.cityName)
         currentTemp = view.findViewById(R.id.currentTemp)
         weatherDescription = view.findViewById(R.id.weatherDescription)
+        weatherDescriptionLine = view.findViewById(R.id.weatherDescriptionLine)
+        currentDate = view.findViewById(R.id.currentDate)
+        currentTime = view.findViewById(R.id.currentTime)
         minTemp = view.findViewById(R.id.minTemp)
         maxTemp = view.findViewById(R.id.maxTemp)
         weatherIcon = view.findViewById(R.id.weatherIcon)
         progressBar = view.findViewById(R.id.weatherLoading)
         reload = view.findViewById(R.id.reload_weather)
+        weatherIconCard = view.findViewById(R.id.weatherIconCard)
+        currentTempDiscription = view.findViewById(R.id.currentTempDescription)
 
+        reload.setOnClickListener {
+            initWhenReload()
+        }
         return view
     }
 
@@ -96,7 +100,16 @@ class WeatherFragment : Fragment() {
         getWeatherInCurrentLocation()
     }
 
+    private fun initWhenReload(){
+        validation = weatherViewModel.getVal()
+        Log.d("${validation.value}", "validation")
+        progressBar.visibility = View.VISIBLE
+        reload.visibility = View.INVISIBLE
+        getWeatherInCurrentLocation()
+    }
+
     private fun getWeatherInCurrentLocation(){
+
         mLocationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
         mLocationListener = LocationListener { p0 ->
@@ -138,12 +151,12 @@ class WeatherFragment : Fragment() {
                     updateWeather(weatherData)
                     validation.observe(viewLifecycleOwner, Observer {
                         if (validation.value==true){
-                            progressBar.visibility = android.view.View.INVISIBLE
+                            progressBar.visibility = View.INVISIBLE
                             reload.visibility = View.VISIBLE
-
+                            weatherIconCard.visibility = View.VISIBLE
+                            currentTempDiscription.visibility = View.VISIBLE
                         }
                     })
-                    Log.d("${validation.value}", "validation")
                 }
             }
 
@@ -161,10 +174,13 @@ class WeatherFragment : Fragment() {
 
         minTemp.setText("Min :"+weather.tempminString+" ℃")
         maxTemp.setText("Max :"+weather.tempmaxString+" ℃")
-        currentTemp.setText("Current :"+weather.tempString+" ℃")
+        currentTemp.setText(weather.tempString+" ℃")
+        weatherDescriptionLine.setText(weather.weatherType)
         weatherDescription.setText(weather.weatherType)
         val resourceID = resources.getIdentifier(weather.icon, "drawable", activity?.packageName)
         weatherIcon.setImageResource(resourceID)
+        currentDate.setText(getCurrentDate())
+        currentTime.setText(getCurrentTime())
         validation.value = true
 
     }
@@ -174,5 +190,17 @@ class WeatherFragment : Fragment() {
         if(mLocationManager!=null){
             mLocationManager.removeUpdates(mLocationListener)
         }
+    }
+
+    private fun getCurrentDate(): String {
+        val currentTime = System.currentTimeMillis()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(Date(currentTime))
+    }
+
+    private fun getCurrentTime(): String {
+        val currentTime = System.currentTimeMillis()
+        val dateFormat = SimpleDateFormat("a hh:mm", Locale.getDefault())
+        return dateFormat.format(Date(currentTime))
     }
 }
