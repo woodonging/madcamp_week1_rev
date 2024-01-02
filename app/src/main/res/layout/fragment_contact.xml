@@ -14,7 +14,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/searchBar">
+            android:id="@+id/searchBar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
 
             <EditText
                 android:id="@+id/search"
@@ -38,8 +40,8 @@
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:clickable="true"
                 android:background="@drawable/plus_symbol"
+                android:clickable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/search"
                 app:layout_constraintRight_toRightOf="parent"
