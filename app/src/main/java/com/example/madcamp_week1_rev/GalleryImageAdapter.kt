@@ -34,7 +34,7 @@ class GalleryImageAdapter(private val imageList: MutableList<GalleryRecyclerMode
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val imageModel = imageList[position]
-        if (imageModel.image is Int || imageModel.image is Uri || imageModel.image is Bitmap) {
+        if (imageModel.image is Uri || imageModel.image is Bitmap) {
             Glide.with(holder.itemView.context)
                 .load(imageModel.image)
                 .into(holder.imageView)

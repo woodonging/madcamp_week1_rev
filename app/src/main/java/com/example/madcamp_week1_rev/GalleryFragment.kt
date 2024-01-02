@@ -17,6 +17,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MotionEvent
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
@@ -33,6 +34,7 @@ class GalleryFragment : Fragment() {
     private val addByCameraCode = 200
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: GalleryImageAdapter
+    private lateinit var menuButton: ImageButton
     private lateinit var emptyview: TextView
     private lateinit var gallerybutton: FloatingActionButton
     private lateinit var camerabutton: FloatingActionButton
@@ -58,7 +60,7 @@ class GalleryFragment : Fragment() {
 
         adapter = GalleryImageAdapter(galleryViewModel.getImageList())
         recyclerView.adapter = adapter
-        emptyview = view.findViewById(R.id.emptygallery)
+        /*emptyview = view.findViewById(R.id.emptygallery)*/
 
         adapter.setItemClickListener(object: GalleryImageAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
@@ -72,8 +74,14 @@ class GalleryFragment : Fragment() {
             }
         })
 
+        menuButton = view.findViewById(R.id.menuButton)
         gallerybutton = view.findViewById(R.id.PhotoAddButton)
         camerabutton = view.findViewById(R.id.CameraButton)
+
+        menuButton.setOnClickListener {
+            gallerybutton.visibility = View.VISIBLE
+            camerabutton.visibility = View.VISIBLE
+        }
 
         gallerybutton.setOnClickListener{
             addFromGallery()
@@ -82,17 +90,17 @@ class GalleryFragment : Fragment() {
             addByCamera()
         }
 
-        isempty()
+        /*isempty()*/
         return view
     }
 
-    private fun isempty(){
+/*    private fun isempty(){
         if (galleryViewModel.getImageList().size<=0) {
             emptyview.visibility = View.VISIBLE // 표시
         } else {
             emptyview.visibility = View.GONE // 숨김
         }
-    }
+    }*/
 
     private fun addFromGallery() {
         val galleryIntent = Intent(Intent.ACTION_GET_CONTENT)
@@ -142,7 +150,7 @@ class GalleryFragment : Fragment() {
     private fun addImageToRecyclerView(image: Any) {
         galleryViewModel.addImage(GalleryRecyclerModel(image))
         adapter.notifyDataSetChanged()
-        isempty()
+        /*isempty()*/
     }
 
     private fun showImageDialog(image: Any) {
@@ -158,7 +166,7 @@ class GalleryFragment : Fragment() {
         builder.setPositiveButton("삭제") { _, _ ->
             (recyclerView.adapter as GalleryImageAdapter).removeItem(position)
             adapter.notifyDataSetChanged()
-            isempty()
+            /*isempty()*/
         }
 
         builder.setNegativeButton("취소") { _, _ ->
