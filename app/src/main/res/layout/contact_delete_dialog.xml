@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="350dp"
+    android:layout_height="180dp"
+    android:id="@+id/dialogDelete"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    android:background="@drawable/round_rect_shape"
+    android:clickable="false">
 
     <TextView
-        android:id="@+id/confirmText"
+        android:id="@+id/confirm_text"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="100dp"
         android:gravity="center"
         android:text="@string/defaultMessage"
         android:textSize="18sp"
@@ -18,32 +25,34 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/confirmText"
+        app:layout_constraintTop_toBottomOf="@id/confirm_text"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
         <Button
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:id="@+id/cancelDeleteButton"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:id="@+id/cancel_delete_button"
             android:text="@string/cancel"
             android:backgroundTint="@color/white"
             android:textSize="18sp"
             android:textColor="@color/black"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/confirmDeleteButton"/>
+            app:layout_constraintRight_toLeftOf="@id/confirm_delete_button"
+            app:layout_constraintBottom_toBottomOf="parent"/>
         <Button
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:id="@+id/confirmDeleteButton"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:id="@+id/confirm_delete_button"
             android:backgroundTint="@color/white"
             android:text="@string/deleteMessage"
             android:textSize="18sp"
             android:textColor="@color/red"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/cancelDeleteButton"/>
+            app:layout_constraintLeft_toRightOf="@id/cancel_delete_button"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

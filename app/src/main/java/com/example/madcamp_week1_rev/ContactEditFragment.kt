@@ -1,6 +1,9 @@
 package com.example.madcamp_week1_rev
 
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -32,15 +35,82 @@ class ContactEditFragment : Fragment() {
         val memoEdit = view.findViewById<EditText>(R.id.memo)
         var position = arguments?.getInt("position")
         var contact = contactViewModel.getContact(position!!)
+        var changedName : String = contact.name
+        var changedPhone : String = contact.phone
+        var changedMemo : String = contact.information
 
 
         nameEdit.setText(contact.name)
         phoneEdit.setText(contact.phone)
         memoEdit.setText(contact.information)
+        nameEdit.addTextChangedListener(object:TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                changedName= s.toString()
+                Log.d("change", "change")
+                if((changedName!=contact.name)||(changedPhone!=contact.phone)||((changedMemo!=contact.information))){
+                    completeButtonView.isEnabled = true
+                    completeButtonView.setTextColor(Color.WHITE)
+                }
+                else{
+                    completeButtonView.isEnabled = false
+                    completeButtonView.setTextColor(Color.LTGRAY)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
+        phoneEdit.addTextChangedListener(object:TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                changedPhone= s.toString()
+                if((changedName!=contact.name)||(changedPhone!=contact.phone)||((changedMemo!=contact.information))){
+                    completeButtonView.isEnabled = true
+                    completeButtonView.setTextColor(Color.WHITE)
+                }
+                else{
+                    completeButtonView.isEnabled = false
+                    completeButtonView.setTextColor(Color.LTGRAY)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
+        memoEdit.addTextChangedListener(object:TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                changedMemo= s.toString()
+                if((changedName!=contact.name)||(changedPhone!=contact.phone)||((changedMemo!=contact.information))){
+                    completeButtonView.isEnabled = true
+                    completeButtonView.setTextColor(Color.WHITE)
+                }
+                else{
+                    completeButtonView.isEnabled = false
+                    completeButtonView.setTextColor(Color.LTGRAY)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
 
 
+
+        completeButtonView.isEnabled = false
+        completeButtonView.setTextColor(Color.LTGRAY)
         completeButtonView.setOnClickListener {
-            completeButtonView.text = "미구현"
+            contactViewModel.updateContact(position, Contact(changedName, changedPhone, changedMemo))
+            val fragmentManager = requireActivity().supportFragmentManager
+            fragmentManager.popBackStack()
         }
 
         cancelButtonView.setOnClickListener {

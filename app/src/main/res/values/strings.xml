@@ -2,7 +2,7 @@
     <string name="app_name">madcamp_week1_rev</string>
     <string name="contact">Contact</string>
     <string name="gallery">Gallery</string>
-    <string name="memo">Memo</string>
+    <string name="weather">Weather</string>
     <string name="defaultMessage">Default</string>
     <string name="nameTitle">이름</string>
     <string name="numberTitle">전화번호</string>

@@ -29,6 +29,9 @@ class ContactViewModel: ViewModel() {
         return -1
     }
 
+    fun deleteContact(contact : Contact){
+        contactList.remove(contact)
+    }
     fun updateContact(position: Int, newContact:Contact){
         if (position in 0 until contactList.size)
         {

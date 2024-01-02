@@ -13,6 +13,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.w3c.dom.Text
 import com.google.android.gms.location.LocationServices
 import android.location.Geocoder
 import android.location.LocationListener
@@ -34,6 +40,10 @@ class WeatherFragment : Fragment() {
         const val MIN_TIME: Long = 5000
         const val MIN_DISTANCE: Float = 1000F
         const val WEATHER_REQUEST: Int = 102
+      
+        fun newInstance():WeatherFragment{
+            return WeatherFragment()
+        }
     }
 
     private lateinit var cityName: TextView
@@ -46,11 +56,18 @@ class WeatherFragment : Fragment() {
 
     private lateinit var mLocationManager: LocationManager
     private lateinit var mLocationListener: LocationListener
-
+    private lateinit var weatherViewModel: WeatherViewModel
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        weatherViewModel = ViewModelProvider(requireActivity()).get(WeatherViewModel::class.java)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+
+        var validation = weatherViewModel.getVal()
         val view = inflater.inflate(R.layout.fragment_weather, container, false)
 
         cityName = view.findViewById(R.id.cityName)

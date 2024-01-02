@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -56,7 +57,7 @@ class ContactFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val contacts = view.findViewById<RecyclerView>(R.id.contact_board)
-
+        val additionButton = view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.contactAdd)
         var contactList = contactViewModel.getContactList()
         this.contactAdapter = ContactAdapter(contactList)
 
@@ -71,6 +72,13 @@ class ContactFragment : Fragment() {
                 transaction.commit()
             }
         })
+        additionButton.setOnClickListener{
+            val addContact = ContactAdd.newInstance()
+            val transaction = requireActivity().supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.frame, addContact)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
         val searchEdit = view.findViewById<EditText>(R.id.search)
 
         searchEdit.addTextChangedListener(object: TextWatcher{
