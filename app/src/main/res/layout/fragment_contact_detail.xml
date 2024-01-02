@@ -63,6 +63,7 @@
             android:background="@color/darkGray"
             android:orientation="vertical"
             android:padding="20dp"
+            android:layout_marginBottom="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/pnContainer">
@@ -131,11 +132,11 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/deleteButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/round_rect_shape"
                 android:padding="10dp"
                 android:text="@string/deleteMessage"
