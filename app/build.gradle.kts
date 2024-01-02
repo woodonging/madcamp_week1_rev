@@ -61,6 +61,7 @@ dependencies {
     implementation("com.davemorrissey.labs:subsampling-scale-image-view:3.10.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
 
+    implementation ("com.loopj.android:android-async-http:1.4.11")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.retrofit2:converter-scalars:2.9.0")
@@ -69,6 +70,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
+
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

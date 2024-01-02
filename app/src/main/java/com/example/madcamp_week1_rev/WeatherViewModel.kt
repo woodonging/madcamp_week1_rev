@@ -52,7 +52,6 @@ class WeatherViewModel : ViewModel() {
                 lon=location.longitude
                 validation.value = true
             }
-        }
             .addOnFailureListener{fail ->
                 Toast.makeText(context,"위치 정보 불러오기 실패", Toast.LENGTH_SHORT)
             }
