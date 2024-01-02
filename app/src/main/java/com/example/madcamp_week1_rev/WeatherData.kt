@@ -23,9 +23,9 @@ class WeatherData{
             weatherData.icon = updateWeatherIcon(weatherData.weatherId)
             val lat: Double = (jsonObject.getJSONObject("coord").getDouble("lat"))
             val lon: Double = (jsonObject.getJSONObject("coord").getDouble("lon"))
-            val roundedTemp: Double = (jsonObject.getJSONObject("main").getDouble("temp")-273.15)
-            val roundedTempmax: Double = (jsonObject.getJSONObject("main").getDouble("temp_max")-273.15)
-            val roundedTempmin: Double = (jsonObject.getJSONObject("main").getDouble("temp_min")-273.15)
+            val roundedTemp: Int = (jsonObject.getJSONObject("main").getDouble("temp")-273.15).toInt()
+            val roundedTempmax: Int = (jsonObject.getJSONObject("main").getDouble("temp_max")-273.15).toInt()
+            val roundedTempmin: Int = (jsonObject.getJSONObject("main").getDouble("temp_min")-273.15).toInt()
 
             weatherData.latstring = lat.toString()
             weatherData.lonstring = lon.toString()
@@ -41,32 +41,32 @@ class WeatherData{
 
     private fun updateWeatherIcon(condition: Int): String {
         if (condition in 200..299) {
-            return "thunderstorm"
+            return "weather_thunderstorm"
         } else if (condition in 300..499) {
-            return "rain" //lightrain
+            return "weather_rain" //lightrain
         } else if (condition in 500..599) {
-            return "rain"
+            return "weather_rain"
         } else if (condition in 600..700) {
-            return "snow"
+            return "weather_snow"
         } else if (condition in 701..771) {
-            return "cloudy" //fog
+            return "weather_fog"
         } else if (condition in 772..799) {
-            return "cloudy" //overcast
+            return "weather_overcast"
         } else if (condition == 800) {
-            return "clear"
+            return "weather_sunny"
         } else if (condition in 801..804) {
-            return "cloudy"
+            return "weather_cloudy"
         } else if (condition in 900..902) {
-            return "thunderstorm"
+            return "weather_thunderstorm"
         }
         if (condition == 903) {
-            return "snow"
+            return "weather_snow"
         }
         if (condition == 904) {
-            return "clear"
+            return "weather_sunny"
         }
         return if (condition in 905..1000) {
-            "thunderstorm"
+            "weather_thunderstorm"
         } else "dunno"
 
     }
