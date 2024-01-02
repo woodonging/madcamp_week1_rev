@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,14 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.w3c.dom.Text
-import com.google.android.gms.location.LocationServices
 import android.location.Geocoder
 import android.location.LocationListener
 import android.location.LocationManager
@@ -27,13 +19,11 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.core.app.ActivityCompat
-import androidx.core.view.isInvisible
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
-import okhttp3.internal.http2.Header
 import org.json.JSONObject
 import java.util.Locale
 
@@ -44,7 +34,6 @@ class WeatherFragment : Fragment() {
         const val WEATHER_URL: String = "https://api.openweathermap.org/data/2.5/weather"
         const val MIN_TIME: Long = 5000
         const val MIN_DISTANCE: Float = 1000F
-        const val WEATHER_REQUEST: Int = 102
       
         fun newInstance():WeatherFragment{
             return WeatherFragment()
