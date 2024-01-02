@@ -17,8 +17,10 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MotionEvent
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.FileProvider
+import androidx.lifecycle.ViewModelProvider
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -28,15 +30,20 @@ import java.util.Locale
 class GalleryFragment : Fragment() {
 
     private var currentPhotoPath: String? = null
-    private val addfromgallerycode = 100
-    private val addbycameracode = 200
+    private val addFromGalleryCode = 100
+    private val addByCameraCode = 200
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: GalleryImageAdapter
+    private lateinit var menuButton: ImageButton
     private lateinit var emptyview: TextView
     private lateinit var gallerybutton: FloatingActionButton
     private lateinit var camerabutton: FloatingActionButton
-    private val imageList = mutableListOf<GalleryRecyclerModel>()
+    private lateinit var galleryViewModel: GalleryViewModel
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        galleryViewModel=ViewModelProvider(requireActivity()).get(GalleryViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,13 +58,13 @@ class GalleryFragment : Fragment() {
         val itemDecoration = GalleryImageSpacing(spacingInPixels)
         recyclerView.addItemDecoration(itemDecoration)
 
-        adapter = GalleryImageAdapter(imageList)
+        adapter = GalleryImageAdapter(galleryViewModel.getImageList())
         recyclerView.adapter = adapter
-        emptyview = view.findViewById(R.id.emptygallery)
+        /*emptyview = view.findViewById(R.id.emptygallery)*/
 
         adapter.setItemClickListener(object: GalleryImageAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
-                showImageDialog(imageList[position].image)
+                showImageDialog(galleryViewModel.getImage(position).image)
             }
         })
 
@@ -67,35 +74,41 @@ class GalleryFragment : Fragment() {
             }
         })
 
+        menuButton = view.findViewById(R.id.menuButton)
         gallerybutton = view.findViewById(R.id.PhotoAddButton)
         camerabutton = view.findViewById(R.id.CameraButton)
 
-        gallerybutton.setOnClickListener{
-            addfromgallery()
-        }
-        camerabutton.setOnClickListener{
-            addbycamera()
+        menuButton.setOnClickListener {
+            gallerybutton.visibility = View.VISIBLE
+            camerabutton.visibility = View.VISIBLE
         }
 
-        isempty()
+        gallerybutton.setOnClickListener{
+            addFromGallery()
+        }
+        camerabutton.setOnClickListener{
+            addByCamera()
+        }
+
+        /*isempty()*/
         return view
     }
 
-    private fun isempty(){
-        if (imageList.size<=0) {
+/*    private fun isempty(){
+        if (galleryViewModel.getImageList().size<=0) {
             emptyview.visibility = View.VISIBLE // 표시
         } else {
             emptyview.visibility = View.GONE // 숨김
         }
-    }
+    }*/
 
-    private fun addfromgallery() {
+    private fun addFromGallery() {
         val galleryIntent = Intent(Intent.ACTION_GET_CONTENT)
         galleryIntent.type = "image/*"
-        startActivityForResult(galleryIntent, addfromgallerycode)
+        startActivityForResult(galleryIntent, addFromGalleryCode)
     } //onActivityResult랑 세트. addfromgallery_code랑 비교해서 addfromgallery에서 온 실행이라는 것을 파악 가능
 
-    private fun addbycamera() {
+    private fun addByCamera() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         // 이미지를 저장할 파일 생성
         val photoFile: File? = try {
@@ -111,14 +124,14 @@ class GalleryFragment : Fragment() {
                 it
             )
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-            startActivityForResult(cameraIntent, addbycameracode)
+            startActivityForResult(cameraIntent, addByCameraCode)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == addfromgallerycode && resultCode == Activity.RESULT_OK) {
+        if (requestCode == addFromGalleryCode && resultCode == Activity.RESULT_OK) {
             val selectedImageUri: Uri? = data?.data
 
             if (selectedImageUri != null) {
@@ -126,7 +139,7 @@ class GalleryFragment : Fragment() {
             }
         }
 
-        if (requestCode == addbycameracode && resultCode == Activity.RESULT_OK) {
+        if (requestCode == addByCameraCode && resultCode == Activity.RESULT_OK) {
             currentPhotoPath?.let { path ->
                 val imageFile = File(path)
                 addImageToRecyclerView(Uri.fromFile(imageFile))
@@ -135,9 +148,9 @@ class GalleryFragment : Fragment() {
 
     }
     private fun addImageToRecyclerView(image: Any) {
-        imageList.add(GalleryRecyclerModel(image))
+        galleryViewModel.addImage(GalleryRecyclerModel(image))
         adapter.notifyDataSetChanged()
-        isempty()
+        /*isempty()*/
     }
 
     private fun showImageDialog(image: Any) {
@@ -153,7 +166,7 @@ class GalleryFragment : Fragment() {
         builder.setPositiveButton("삭제") { _, _ ->
             (recyclerView.adapter as GalleryImageAdapter).removeItem(position)
             adapter.notifyDataSetChanged()
-            isempty()
+            /*isempty()*/
         }
 
         builder.setNegativeButton("취소") { _, _ ->
