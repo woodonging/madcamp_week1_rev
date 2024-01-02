@@ -11,14 +11,11 @@ import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var weatherViewModel: WeatherViewModel
     val PERMISSION_CODE = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        weatherViewModel.getFirstLocation(this)
         val file = File(getExternalFilesDir(null), "test.txt")
         val contact: Fragment = ContactFragment()
         val gallery: Fragment = GalleryFragment()
