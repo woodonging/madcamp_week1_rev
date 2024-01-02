@@ -2,6 +2,9 @@ package com.example.madcamp_week1_rev
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import de.hdodenhof.circleimageview.CircleImageView
 
 class ContactDetailFragment : Fragment() {
 
@@ -30,16 +34,32 @@ class ContactDetailFragment : Fragment() {
 
         val position = arguments?.getInt("position")
         Log.d("$position", "1번")
+        val profileView = view.findViewById<CircleImageView>(R.id.profilePart)
         val nameView = view.findViewById<TextView>(R.id.namePart)
         val numberView = view.findViewById<TextView>(R.id.number)
         val memoView = view.findViewById<TextView>(R.id.memo)
         val editButtonView = view.findViewById<Button>(R.id.editButton)
         val deleteButtonView = view.findViewById<Button>(R.id.deleteButton)
-        var contact: Contact = contactViewModel.getContact(position!!)
-        nameView.text = contact.name
+        var contact: Contact? = contactViewModel.getContact(position!!)
+        nameView.text = contact!!.name
         numberView.text = contact.phone
         memoView.text = contact.information
-
+        if (contact.profile is Uri){
+            profileView.setImageURI(contact.profile as Uri)
+            Log.d("Here", "ImageURI")
+        }
+        else if (contact.profile is Bitmap){
+            profileView.setImageBitmap(contact.profile as Bitmap)
+            Log.d("Here", "ImageBitmap")
+        }
+        else if (contact.profile is Int){
+            profileView.setImageResource(contact.profile as Int)
+            Log.d("Here", "Int")
+        }
+        else if (contact.profile is Drawable){
+            profileView.setImageDrawable(contact.profile as Drawable)
+            Log.d("Here", "Drawable")
+        }
         editButtonView.setOnClickListener{
             val edit = ContactEditFragment.newInstance(position)
             Log.d("$position", "2번")
