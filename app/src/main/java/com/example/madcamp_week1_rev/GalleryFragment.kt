@@ -19,8 +19,10 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
+import org.w3c.dom.Text
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -34,8 +36,8 @@ class GalleryFragment : Fragment() {
     private val addByCameraCode = 200
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: GalleryImageAdapter
-    private lateinit var menuButton: ImageButton
-    private lateinit var emptyview: TextView
+    private lateinit var imageCount : TextView
+    private lateinit var menuButton: AppCompatButton
     private lateinit var gallerybutton: ImageButton
     private lateinit var camerabutton: ImageButton
     private lateinit var galleryViewModel: GalleryViewModel
@@ -61,7 +63,7 @@ class GalleryFragment : Fragment() {
 
         adapter = GalleryImageAdapter(galleryViewModel.getImageList())
         recyclerView.adapter = adapter
-        /*emptyview = view.findViewById(R.id.emptygallery)*/
+        imageCount = view.findViewById(R.id.imageCount)
 
         adapter.setItemClickListener(object: GalleryImageAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
@@ -81,12 +83,12 @@ class GalleryFragment : Fragment() {
 
         menuButton.setOnClickListener {
             if (!isMenuOpen){
-                menuButton.setImageResource(resources.getIdentifier("minus_symbol", "drawable", activity?.packageName))
+                menuButton.setBackgroundResource(R.drawable.minus_symbol)
                 gallerybutton.visibility = View.VISIBLE
                 camerabutton.visibility = View.VISIBLE
                 isMenuOpen=true
             } else {
-                menuButton.setImageResource(resources.getIdentifier("plus_symbol", "drawable", activity?.packageName))
+                menuButton.setBackgroundResource(R.drawable.plus_symbol)
                 gallerybutton.visibility = View.INVISIBLE
                 camerabutton.visibility = View.INVISIBLE
                 isMenuOpen=false
@@ -100,17 +102,13 @@ class GalleryFragment : Fragment() {
             addByCamera()
         }
 
-        /*isempty()*/
+        countImage()
         return view
     }
 
-/*    private fun isempty(){
-        if (galleryViewModel.getImageList().size<=0) {
-            emptyview.visibility = View.VISIBLE // 표시
-        } else {
-            emptyview.visibility = View.GONE // 숨김
-        }
-    }*/
+    private fun countImage(){
+            imageCount.setText("이미지 "+galleryViewModel.getImageList().size+" 개")
+    }
 
     private fun addFromGallery() {
         val galleryIntent = Intent(Intent.ACTION_GET_CONTENT)
@@ -160,7 +158,7 @@ class GalleryFragment : Fragment() {
     private fun addImageToRecyclerView(image: Any) {
         galleryViewModel.addImage(GalleryRecyclerModel(image))
         adapter.notifyDataSetChanged()
-        /*isempty()*/
+        countImage()
     }
 
     private fun showImageDialog(image: Any) {
@@ -176,7 +174,7 @@ class GalleryFragment : Fragment() {
         builder.setPositiveButton("삭제") { _, _ ->
             (recyclerView.adapter as GalleryImageAdapter).removeItem(position)
             adapter.notifyDataSetChanged()
-            /*isempty()*/
+            countImage()
         }
 
         builder.setNegativeButton("취소") { _, _ ->
