@@ -33,6 +33,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search"
             tools:listitem="@layout/contacts" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/contactAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="30dp"
+            android:clickable="true"
+            android:src="@drawable/contact"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

@@ -18,11 +18,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        weatherViewModel.getFirstLocation(this)
+        weatherViewModel.getLocation(this)
         val file = File(getExternalFilesDir(null), "test.txt")
         val contact: Fragment = ContactFragment()
         val gallery: Fragment = GalleryFragment()
-        val memo: Fragment = WeatherFragment()
+        val weatherLoading: Fragment = WeatherLoadingFragment()
         val tabLayout: TabLayout = findViewById(R.id.tabLayout)
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame, contact)
@@ -65,8 +65,8 @@ class MainActivity : AppCompatActivity() {
                             .commit()
                     }
 
-                    "Memo" -> {
-                        supportFragmentManager.beginTransaction().replace(R.id.frame, memo)
+                    "Weather" -> {
+                        supportFragmentManager.beginTransaction().replace(R.id.frame, weatherLoading)
                             .commit()
                     }
                 }

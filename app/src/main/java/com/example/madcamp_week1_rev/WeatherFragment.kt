@@ -14,32 +14,31 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.w3c.dom.Text
 
 
 class WeatherFragment : Fragment() {
 
     private lateinit var weatherViewModel: WeatherViewModel
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        weatherViewModel = ViewModelProvider(requireActivity()).get(WeatherViewModel::class.java)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         var view=inflater.inflate(R.layout.fragment_weather, container, false)
-
         val cityName:TextView = view.findViewById(R.id.cityName)
         val currentTemp:TextView = view.findViewById(R.id.currentTemp)
         val weatherDescription:TextView= view.findViewById(R.id.weatherDescription)
         val minMaxTemp:TextView= view.findViewById(R.id.minMaxTemp)
         val weatherIcon: ImageView =view.findViewById(R.id.weatherIcon)
-        weatherViewModel = ViewModelProvider(requireActivity()).get(WeatherViewModel::class.java)
-        var (lon, lat) = weatherViewModel.getInfo()
-        Log.d("$lat","Here")
-        cityName.text=lat.toString()
-        currentTemp.text=lon.toString()
+
+        var validation = weatherViewModel.getVal()
 
         return view
     }
@@ -56,6 +55,10 @@ class WeatherFragment : Fragment() {
         val MIN_DISTANCE: Float = 1000F
 
     }
-
+    companion object{
+        fun newInstance():WeatherFragment{
+            return WeatherFragment()
+        }
+    }
 
 }
