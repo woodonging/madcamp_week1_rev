@@ -257,7 +257,7 @@ class ContactEditFragment : Fragment() {
                 contactViewModel.deleteContact(position!!)
                 Log.d("deletecontact", "performed with $additionChecker")
             }
-            if (imageChecker){
+            else if (imageChecker){
                 contactViewModel.getContact(position!!)!!.profile = previousProfile
             }
             fragmentManager.popBackStack()

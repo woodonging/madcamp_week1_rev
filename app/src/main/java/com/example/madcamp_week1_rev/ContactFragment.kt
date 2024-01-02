@@ -62,6 +62,7 @@ class ContactFragment : Fragment() {
         val contacts = view.findViewById<RecyclerView>(R.id.contact_board)
         val additionButton = view.findViewById<AppCompatButton>(R.id.contactAdd)
         var contactList = contactViewModel.getContactList()
+        contactList.sortBy{it.name}
         while(contactList.first().name.isEmpty()){
             contactViewModel.deleteContact(0)
             contactList = contactViewModel.getContactList()

@@ -14,4 +14,5 @@
     <string name="deleteMessage">연락처 삭제</string>
     <string name="imageAddition">사진 추가</string>
     <string name="addition">+</string>
+    <string name="galleryErrorMessage">현재 갤러리에 추가된 이미지가 없습니다</string>
 </resources>

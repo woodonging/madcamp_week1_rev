@@ -54,16 +54,21 @@ class ContactGalleryFragment : Fragment() {
         val spacingInPixels = resources.getDimensionPixelSize(R.dimen.spacing)
         val itemDecoration = GalleryImageSpacing(spacingInPixels)
         recyclerView.addItemDecoration(itemDecoration)
-
         adapter = GalleryImageAdapter(galleryViewModel.getImageList())
         recyclerView.adapter = adapter
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val contactPosition = arguments?.getInt("contactPosition")
+        val emptyGallery = view.findViewById<TextView>(R.id.noImage)
+        if (galleryViewModel.getImageList().size==0){
+            emptyGallery.visibility = View.VISIBLE
+        }
+        else{
+            emptyGallery.visibility = View.INVISIBLE
+        }
         adapter.setItemClickListener(object: GalleryImageAdapter.OnItemClickListener{
             override fun onClick(v: View, position: Int) {
                 contactViewModel.setImage(contactPosition!! ,galleryViewModel.getImage(position).image)

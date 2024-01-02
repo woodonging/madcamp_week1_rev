@@ -20,7 +20,6 @@ class ContactViewModel: ViewModel() {
     }
     fun addContact(contact: Contact){
         contactList.add(contact)
-        contactList.sortBy{it.name}
     }
     fun findPosition(name: String, number: String, memo: String): Int{
         var contact:Contact
@@ -42,7 +41,6 @@ class ContactViewModel: ViewModel() {
         if (position in 0 until contactList.size)
         {
             contactList[position] = newContact
-            contactList.sortBy{it.name}
         }
     }
 }
