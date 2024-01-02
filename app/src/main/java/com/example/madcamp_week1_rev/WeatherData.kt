@@ -43,27 +43,27 @@ class WeatherData{
         if (condition in 200..299) {
             return "weather_thunderstorm"
         } else if (condition in 300..499) {
-            return "weather_rain" //lightrain
+            return "wp_rain" //lightrain
         } else if (condition in 500..599) {
-            return "weather_rain"
+            return "wp_rain"
         } else if (condition in 600..700) {
-            return "weather_snow"
+            return "wp_snow"
         } else if (condition in 701..771) {
             return "weather_fog"
         } else if (condition in 772..799) {
-            return "weather_overcast"
+            return "wp_cloudy"
         } else if (condition == 800) {
-            return "weather_sunny"
+            return "wp_sunny"
         } else if (condition in 801..804) {
-            return "weather_cloudy"
+            return "wp_cloudy"
         } else if (condition in 900..902) {
             return "weather_thunderstorm"
         }
         if (condition == 903) {
-            return "weather_snow"
+            return "wp_snow"
         }
         if (condition == 904) {
-            return "weather_sunny"
+            return "wp_sunny"
         }
         return if (condition in 905..1000) {
             "weather_thunderstorm"
