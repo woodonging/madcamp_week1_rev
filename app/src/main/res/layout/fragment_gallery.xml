@@ -47,10 +47,9 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginRight="10dp"
-                android:background="@color/white"
+                android:background="@drawable/gallery_svgrepo_com"
                 android:clickable="true"
                 android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_menu_gallery"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/CameraButton"
@@ -61,7 +60,6 @@
                 android:id="@+id/CameraButton"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:background="@color/white"
                 android:clickable="true"
                 android:scaleType="centerCrop"
                 android:visibility="invisible"
@@ -69,7 +67,7 @@
                 app:layout_constraintRight_toLeftOf="@id/menuButton"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/ic_menu_camera" />
+                android:background="@drawable/camera_svgrepo_com" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
