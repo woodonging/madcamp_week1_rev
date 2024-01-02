@@ -43,7 +43,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profilePart"
+                android:id="@+id/profileEdit"
                 android:layout_width="160dp"
                 android:layout_height="160dp"
                 android:layout_marginTop="100dp"
@@ -63,7 +63,7 @@
                 android:textSize="15sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/profilePart" />
+                app:layout_constraintTop_toBottomOf="@id/profileEdit" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

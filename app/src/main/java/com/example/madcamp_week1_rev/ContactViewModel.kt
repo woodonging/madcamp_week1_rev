@@ -32,9 +32,11 @@ class ContactViewModel: ViewModel() {
         }
         return -1
     }
-
-    fun deleteContact(contact : Contact){
-        contactList.remove(contact)
+    fun setImage(position:Int, image: Any){
+        contactList[position].profile = image
+    }
+    fun deleteContact(position: Int){
+        contactList.removeAt(position)
     }
     fun updateContact(position: Int, newContact:Contact){
         if (position in 0 until contactList.size)

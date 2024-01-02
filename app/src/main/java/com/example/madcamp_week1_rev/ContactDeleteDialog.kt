@@ -18,10 +18,12 @@ class ContactDelete(contact : Contact) : DialogFragment() {
 
     private lateinit var contactViewModel : ContactViewModel
     private var contact : Contact = contact
+    private var position :Int? = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         contactViewModel = ViewModelProvider(requireActivity()).get(ContactViewModel::class.java)
+        position = contactViewModel.findPosition(contact.name, contact.phone, contact.information)
     }
 
     override fun onCreateView(
@@ -38,7 +40,7 @@ class ContactDelete(contact : Contact) : DialogFragment() {
             dismiss()
         }
         binding.confirmDeleteButton.setOnClickListener {
-            contactViewModel.deleteContact(contact)
+            contactViewModel.deleteContact(position!!)
             val fragmentManager = requireActivity().supportFragmentManager
             fragmentManager.popBackStack()
             dismiss()

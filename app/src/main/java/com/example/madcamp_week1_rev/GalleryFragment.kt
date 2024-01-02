@@ -193,4 +193,10 @@ class GalleryFragment : Fragment() {
             throw ex
         }
     }
+
+    companion object{
+        fun newInstance():GalleryFragment{
+            return GalleryFragment()
+        }
+    }
 }

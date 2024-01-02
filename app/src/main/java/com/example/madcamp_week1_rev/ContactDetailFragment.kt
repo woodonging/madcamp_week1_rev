@@ -44,21 +44,26 @@ class ContactDetailFragment : Fragment() {
         nameView.text = contact!!.name
         numberView.text = contact.phone
         memoView.text = contact.information
-        if (contact.profile is Uri){
-            profileView.setImageURI(contact.profile as Uri)
-            Log.d("Here", "ImageURI")
-        }
-        else if (contact.profile is Bitmap){
-            profileView.setImageBitmap(contact.profile as Bitmap)
-            Log.d("Here", "ImageBitmap")
-        }
-        else if (contact.profile is Int){
-            profileView.setImageResource(contact.profile as Int)
-            Log.d("Here", "Int")
-        }
-        else if (contact.profile is Drawable){
-            profileView.setImageDrawable(contact.profile as Drawable)
-            Log.d("Here", "Drawable")
+        when (contact.profile) {
+            is Uri -> {
+                profileView.setImageURI(contact.profile as Uri)
+                Log.d("Here", "ImageURI")
+            }
+
+            is Bitmap -> {
+                profileView.setImageBitmap(contact.profile as Bitmap)
+                Log.d("Here", "ImageBitmap")
+            }
+
+            is Int -> {
+                profileView.setImageResource(contact.profile as Int)
+                Log.d("Here", "Int")
+            }
+
+            is Drawable -> {
+                profileView.setImageDrawable(contact.profile as Drawable)
+                Log.d("Here", "Drawable")
+            }
         }
         editButtonView.setOnClickListener{
             val edit = ContactEditFragment.newInstance(position)
