@@ -11,8 +11,12 @@ class ContactViewModel: ViewModel() {
     fun getContactList(): ArrayList<Contact>{
         return contactList
     }
-    fun getContact(position: Int): Contact{
-        return contactList[position]
+    fun getContact(position: Int): Contact?{
+        return if (position in 0 until contactList.size) {
+            contactList[position]
+        } else{
+            null
+        }
     }
     fun addContact(contact: Contact){
         contactList.add(contact)

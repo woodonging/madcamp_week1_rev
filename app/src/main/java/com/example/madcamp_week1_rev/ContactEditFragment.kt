@@ -35,14 +35,27 @@ class ContactEditFragment : Fragment() {
         val memoEdit = view.findViewById<EditText>(R.id.memo)
         var position = arguments?.getInt("position")
         var contact = contactViewModel.getContact(position!!)
-        var changedName : String = contact.name
-        var changedPhone : String = contact.phone
-        var changedMemo : String = contact.information
+        var changedName : String
+        var changedPhone : String
+        var changedMemo : String
 
-
-        nameEdit.setText(contact.name)
-        phoneEdit.setText(contact.phone)
-        memoEdit.setText(contact.information)
+        if (contact != null){
+            nameEdit.setText(contact.name)
+            phoneEdit.setText(contact.phone)
+            memoEdit.setText(contact.information)
+        }
+        else{
+            contact = Contact("", "", "", GalleryRecyclerModel(R.drawable.default_profile))
+            nameEdit.hint = "이름"
+            nameEdit.text = null
+            phoneEdit.hint = "전화번호"
+            phoneEdit.text = null
+            memoEdit.hint = "메모"
+            memoEdit.text = null
+        }
+        changedName = contact.name
+        changedMemo = contact.information
+        changedPhone = contact.phone
         nameEdit.addTextChangedListener(object:TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -50,11 +63,16 @@ class ContactEditFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 changedName= s.toString()
                 Log.d("change", "change")
+
                 if((changedName!=contact.name)||(changedPhone!=contact.phone)||((changedMemo!=contact.information))){
                     completeButtonView.isEnabled = true
                     completeButtonView.setTextColor(Color.WHITE)
                 }
                 else{
+                    completeButtonView.isEnabled = false
+                    completeButtonView.setTextColor(Color.LTGRAY)
+                }
+                if((changedName=="")&&(changedPhone=="")&&(changedMemo=="")){
                     completeButtonView.isEnabled = false
                     completeButtonView.setTextColor(Color.LTGRAY)
                 }
@@ -69,11 +87,16 @@ class ContactEditFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 changedPhone= s.toString()
+
                 if((changedName!=contact.name)||(changedPhone!=contact.phone)||((changedMemo!=contact.information))){
                     completeButtonView.isEnabled = true
                     completeButtonView.setTextColor(Color.WHITE)
                 }
                 else{
+                    completeButtonView.isEnabled = false
+                    completeButtonView.setTextColor(Color.LTGRAY)
+                }
+                if((changedName=="")&&(changedPhone=="")&&(changedMemo=="")){
                     completeButtonView.isEnabled = false
                     completeButtonView.setTextColor(Color.LTGRAY)
                 }
@@ -89,6 +112,7 @@ class ContactEditFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 changedMemo= s.toString()
+
                 if((changedName!=contact.name)||(changedPhone!=contact.phone)||((changedMemo!=contact.information))){
                     completeButtonView.isEnabled = true
                     completeButtonView.setTextColor(Color.WHITE)
@@ -97,6 +121,11 @@ class ContactEditFragment : Fragment() {
                     completeButtonView.isEnabled = false
                     completeButtonView.setTextColor(Color.LTGRAY)
                 }
+                if((changedName=="")&&(changedPhone=="")&&(changedMemo=="")){
+                    completeButtonView.isEnabled = false
+                    completeButtonView.setTextColor(Color.LTGRAY)
+                }
+
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -108,8 +137,14 @@ class ContactEditFragment : Fragment() {
         completeButtonView.isEnabled = false
         completeButtonView.setTextColor(Color.LTGRAY)
         completeButtonView.setOnClickListener {
-            contactViewModel.updateContact(position, Contact(changedName, changedPhone, changedMemo))
             val fragmentManager = requireActivity().supportFragmentManager
+
+            if (position == -1){
+                contactViewModel.addContact(Contact(changedName, changedPhone, changedMemo, GalleryRecyclerModel(R.drawable.default_profile)))
+            }
+            else{
+                contactViewModel.updateContact(position, Contact(changedName, changedPhone, changedMemo, GalleryRecyclerModel(R.drawable.default_profile)))
+            }
             fragmentManager.popBackStack()
         }
 

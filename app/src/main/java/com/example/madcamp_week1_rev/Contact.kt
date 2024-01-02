@@ -1,5 +1,5 @@
 package com.example.madcamp_week1_rev
 
-import android.graphics.Bitmap
+import android.media.Image
 
-data class Contact(val name:String, val phone:String, val information:String)
+data class Contact(val name:String, val phone:String, val information:String, val profile: Any)

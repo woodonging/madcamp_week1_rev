@@ -1,5 +1,6 @@
 package com.example.madcamp_week1_rev
 
+import android.media.Image
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,7 +48,7 @@ class ContactFragment : Fragment() {
                 val phone = jsonObject.getString("phone")
                 val information = jsonObject.getString("information")
 
-                contactViewModel.addContact(Contact(name, phone, information))
+                contactViewModel.addContact(Contact(name, phone, information, R.drawable.default_profile))
             }
         }
 
@@ -57,7 +59,7 @@ class ContactFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val contacts = view.findViewById<RecyclerView>(R.id.contact_board)
-        val additionButton = view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.contactAdd)
+        val additionButton = view.findViewById<AppCompatButton>(R.id.contactAdd)
         var contactList = contactViewModel.getContactList()
         this.contactAdapter = ContactAdapter(contactList)
 
@@ -73,7 +75,7 @@ class ContactFragment : Fragment() {
             }
         })
         additionButton.setOnClickListener{
-            val addContact = ContactAdd.newInstance()
+            val addContact = ContactEditFragment.newInstance(-1)
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             transaction.replace(R.id.frame, addContact)
             transaction.addToBackStack(null)
@@ -87,7 +89,6 @@ class ContactFragment : Fragment() {
                 filterData(edit.toString())
 
             }
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
