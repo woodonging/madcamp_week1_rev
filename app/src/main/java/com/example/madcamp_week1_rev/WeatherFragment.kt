@@ -24,7 +24,12 @@ import android.location.Geocoder
 import android.location.LocationListener
 import android.location.LocationManager
 import android.util.Log
+import android.widget.ImageButton
+import android.widget.ProgressBar
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isInvisible
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
@@ -52,22 +57,25 @@ class WeatherFragment : Fragment() {
     private lateinit var minTemp: TextView
     private lateinit var maxTemp: TextView
     private lateinit var weatherIcon: ImageView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var reload : ImageButton
 
 
     private lateinit var mLocationManager: LocationManager
     private lateinit var mLocationListener: LocationListener
     private lateinit var weatherViewModel: WeatherViewModel
+    private lateinit var validation : MutableLiveData<Boolean>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         weatherViewModel = ViewModelProvider(requireActivity()).get(WeatherViewModel::class.java)
     }
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
 
-        var validation = weatherViewModel.getVal()
         val view = inflater.inflate(R.layout.fragment_weather, container, false)
 
         cityName = view.findViewById(R.id.cityName)
@@ -76,6 +84,8 @@ class WeatherFragment : Fragment() {
         minTemp = view.findViewById(R.id.minTemp)
         maxTemp = view.findViewById(R.id.maxTemp)
         weatherIcon = view.findViewById(R.id.weatherIcon)
+        progressBar = view.findViewById(R.id.weatherLoading)
+        reload = view.findViewById(R.id.reload_weather)
 
         return view
     }
@@ -124,7 +134,16 @@ class WeatherFragment : Fragment() {
             ) {
                 val weatherData = WeatherData().fromJson(response)
                 if (weatherData != null) {
+                    validation = weatherViewModel.getVal()
                     updateWeather(weatherData)
+                    validation.observe(viewLifecycleOwner, Observer {
+                        if (validation.value==true){
+                            progressBar.visibility = android.view.View.INVISIBLE
+                            reload.visibility = View.VISIBLE
+
+                        }
+                    })
+                    Log.d("${validation.value}", "validation")
                 }
             }
 
@@ -146,6 +165,8 @@ class WeatherFragment : Fragment() {
         weatherDescription.setText(weather.weatherType)
         val resourceID = resources.getIdentifier(weather.icon, "drawable", activity?.packageName)
         weatherIcon.setImageResource(resourceID)
+        validation.value = true
+
     }
 
     override fun onPause() {

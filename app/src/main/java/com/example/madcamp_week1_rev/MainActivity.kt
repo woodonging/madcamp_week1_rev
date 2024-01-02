@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         val file = File(getExternalFilesDir(null), "test.txt")
         val contact: Fragment = ContactFragment()
         val gallery: Fragment = GalleryFragment()
-        val weatherLoading: Fragment = WeatherLoadingFragment()
+        val weather: Fragment = WeatherFragment()
         val tabLayout: TabLayout = findViewById(R.id.tabLayout)
         supportFragmentManager.beginTransaction()
             .replace(R.id.frame, contact)
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     "Weather" -> {
-                        supportFragmentManager.beginTransaction().replace(R.id.frame, weatherLoading)
+                        supportFragmentManager.beginTransaction().replace(R.id.frame, weather)
                             .commit()
                     }
                 }

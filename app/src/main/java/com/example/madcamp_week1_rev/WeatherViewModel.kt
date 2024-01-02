@@ -32,7 +32,6 @@ class WeatherViewModel : ViewModel() {
             success?.let { location ->
                 lat=location.latitude
                 lon=location.longitude
-                validation.value = true
             }
         }
             .addOnFailureListener{fail ->
@@ -47,10 +46,10 @@ class WeatherViewModel : ViewModel() {
 
         fusedLocationProviderClient.getCurrentLocation(100,null)
             .addOnSuccessListener { success: Location? ->
-            success?.let { location ->
-                lat=location.latitude
-                lon=location.longitude
-                validation.value = true
+                success?.let { location ->
+                    lat = location.latitude
+                    lon = location.longitude
+                }
             }
             .addOnFailureListener{fail ->
                 Toast.makeText(context,"위치 정보 불러오기 실패", Toast.LENGTH_SHORT)

@@ -38,8 +38,7 @@
                 app:layout_constraintTop_toBottomOf="@id/cityName"
                 app:layout_constraintBottom_toTopOf="@id/weatherDescription"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:src="@drawable/weather_loading"/>
+                app:layout_constraintLeft_toLeftOf="parent" />
 
             <TextView
                 android:id="@+id/weatherDescription"
@@ -88,17 +87,29 @@
                 app:layout_constraintLeft_toRightOf="@id/minTemp"
                 />
 
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_close_button"
+            android:id="@+id/reload_weather"
             app:layout_constraintTop_toTopOf="@id/weatherView"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
-            />
+            android:visibility="invisible"/>
+
+        <ProgressBar
+            android:id="@+id/weatherLoading"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
