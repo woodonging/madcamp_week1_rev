@@ -294,7 +294,7 @@ class WeatherFragment : Fragment() {
 
     private fun getCurrentTime(): String {
         val currentTime = System.currentTimeMillis()
-        val dateFormat = SimpleDateFormat("a hh:mm", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("a HH:mm", Locale.getDefault())
         return dateFormat.format(Date(currentTime))
     }
 }
