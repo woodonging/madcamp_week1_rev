@@ -47,10 +47,11 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginRight="10dp"
+                android:alpha="0.0"
                 android:background="@drawable/gallery_svgrepo_com"
                 android:clickable="true"
                 android:scaleType="centerCrop"
-                android:visibility="invisible"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/CameraButton"
                 app:layout_constraintRight_toRightOf="parent"
@@ -60,14 +61,15 @@
                 android:id="@+id/CameraButton"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
+                android:alpha="0.0"
+                android:background="@drawable/camera_svgrepo_com"
                 android:clickable="true"
                 android:scaleType="centerCrop"
-                android:visibility="invisible"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/menuButton"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="@drawable/camera_svgrepo_com" />
+                app:layout_constraintTop_toTopOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -83,24 +85,4 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-        <!--        <TextView
-            android:id="@+id/emptygallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="우측 하단 버튼으로 이미지를 추가해보세요\n추가된 이미지를 길게 누르면 삭제 가능합니다"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.589"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.499" />-->
-
-
-
 </layout>

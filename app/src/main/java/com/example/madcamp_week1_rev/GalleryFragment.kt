@@ -1,8 +1,10 @@
 package com.example.madcamp_week1_rev
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,25 +13,27 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.appcompat.app.AlertDialog
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.transition.TransitionManager
 import android.util.Log
-import android.view.MotionEvent
+import android.view.animation.LinearInterpolator
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
-import org.w3c.dom.Text
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.example.madcamp_week1_rev.databinding.FragmentGalleryBinding
 
-class GalleryFragment : Fragment() {
+class GalleryFragment : Fragment(R.layout.fragment_gallery) {
+
+    private lateinit var binding: FragmentGalleryBinding
 
     private var currentPhotoPath: String? = null
     private val addFromGalleryCode = 100
@@ -41,7 +45,7 @@ class GalleryFragment : Fragment() {
     private lateinit var gallerybutton: ImageButton
     private lateinit var camerabutton: ImageButton
     private lateinit var galleryViewModel: GalleryViewModel
-    private var isMenuOpen: Boolean = false
+    private var areButtonsVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,20 +85,6 @@ class GalleryFragment : Fragment() {
         gallerybutton = view.findViewById(R.id.PhotoAddButton)
         camerabutton = view.findViewById(R.id.CameraButton)
 
-        menuButton.setOnClickListener {
-            if (!isMenuOpen){
-                menuButton.setBackgroundResource(R.drawable.minus_symbol)
-                gallerybutton.visibility = View.VISIBLE
-                camerabutton.visibility = View.VISIBLE
-                isMenuOpen=true
-            } else {
-                menuButton.setBackgroundResource(R.drawable.plus_symbol)
-                gallerybutton.visibility = View.INVISIBLE
-                camerabutton.visibility = View.INVISIBLE
-                isMenuOpen=false
-            }
-        }
-
         gallerybutton.setOnClickListener{
             addFromGallery()
         }
@@ -102,9 +92,75 @@ class GalleryFragment : Fragment() {
             addByCamera()
         }
 
+        areButtonsVisible=false
+
         countImage()
         return view
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = FragmentGalleryBinding.bind(view)
+        binding.menuButton.setOnClickListener {
+
+            TransitionManager.beginDelayedTransition(binding?.galleryfragment)
+
+            if (areButtonsVisible) {
+                // 버튼 숨기기
+                menuButton.setBackgroundResource(R.drawable.plus_symbol)
+                animateTranslationX(gallerybutton, 0f, gallerybutton.width.toFloat())
+                animateTranslationX(camerabutton, 0f, camerabutton.width.toFloat())
+                animateAlpha(gallerybutton, 1f, 0f)
+                animateAlpha(camerabutton, 1f, 0f)
+
+            } else {
+                // 버튼 나타내기
+                menuButton.setBackgroundResource(R.drawable.minus_symbol)
+                animateTranslationX(gallerybutton, gallerybutton.width.toFloat(),0f)
+                animateTranslationX(camerabutton, camerabutton.width.toFloat(), 0f)
+                animateAlpha(gallerybutton, 0f, 1f)
+                animateAlpha(camerabutton, 0f, 1f)
+            }
+
+
+            /*val fadeIn = ObjectAnimator.ofFloat(menuButton, "alpha", 0f, 1f)
+            fadeIn.duration = 150
+
+            val fadeOut = ObjectAnimator.ofFloat(menuButton, "alpha", 1f, 0f)
+            fadeOut.duration = 150
+
+            val animatorSet = AnimatorSet()
+            animatorSet.playSequentially(fadeOut,fadeIn)
+            animatorSet.start()*/
+
+            // 버튼 가시성 상태 변경
+            areButtonsVisible = !areButtonsVisible
+
+        }
+    }
+
+    private fun animateAlpha(view: View?, fromAlpha: Float, toAlpha: Float) {
+        view?.let {
+            val animator = ObjectAnimator.ofFloat(it, "alpha", fromAlpha, toAlpha)
+            animator.interpolator = LinearInterpolator()
+            animator.duration = 300 // 애니메이션 지속 시간 (밀리초)
+            animator.start()
+        }
+    }
+
+    private fun animateTranslationX(view: View?, fromX: Float, toX: Float) {
+        view?.let {
+            val animator = ValueAnimator.ofFloat(fromX, toX)
+            animator.interpolator = LinearInterpolator()
+            animator.duration = 300 // 애니메이션 지속 시간 (밀리초)
+            animator.addUpdateListener { animation ->
+                val value = animation.animatedValue as Float
+                it.translationX = value
+            }
+            animator.start()
+        }
+    }
+
 
     private fun countImage(){
             imageCount.setText("이미지 "+galleryViewModel.getImageList().size+" 개")

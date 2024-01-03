@@ -6,4 +6,8 @@
     </style>
 
     <style name="Theme.Madcamp_week1_rev" parent="Base.Theme.Madcamp_week1_rev" />
+
+    <color name="colorPrimary">#000000</color>
+
+
 </resources>
