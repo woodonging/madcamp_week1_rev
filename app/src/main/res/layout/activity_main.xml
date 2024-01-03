@@ -17,18 +17,21 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/contactTap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:icon="@drawable/contact"
             android:text="@string/contact" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/galleryTap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:icon="@drawable/gallery"
             android:text="@string/gallery" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/weatherTap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:icon="@drawable/weather_icon"
