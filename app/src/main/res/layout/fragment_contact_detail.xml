@@ -19,13 +19,15 @@
             android:layout_height="match_parent"
             app:layout_constraintHeight_percent="0.4">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/editButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:backgroundTint="@color/darkGray"
+                android:background="@drawable/round_rect_shape"
+                android:textColor="@color/white"
                 android:text="@string/edit"
                 android:textSize="18sp"
                 app:layout_constraintRight_toRightOf="parent"
