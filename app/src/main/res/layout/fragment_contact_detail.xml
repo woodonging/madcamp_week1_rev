@@ -26,7 +26,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:backgroundTint="@color/darkGray"
-                android:background="@drawable/round_rect_shape"
+                android:background="@drawable/round_rect_shape2"
                 android:textColor="@color/white"
                 android:text="@string/edit"
                 android:textSize="18sp"
