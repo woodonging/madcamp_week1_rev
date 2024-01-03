@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Madcamp_week1_rev"
+        android:theme="@style/AppTheme"
         tools:targetApi="31">
         <provider
             android:name="androidx.core.content.FileProvider"
