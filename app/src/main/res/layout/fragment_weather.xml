@@ -23,7 +23,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/weatherPop"
             android:layout_width="300dp"
-            android:layout_height="400dp"
+            android:layout_height="430dp"
             android:animateLayoutChanges="true"
             android:background="@drawable/round_rect_shape"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -70,26 +70,13 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="cityName"
-                    android:textSize="18sp"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toTopOf="@id/currentDate"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/currentDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:gravity="center"
-                    android:text="currentDay 2022/01/02"
-                    android:textSize="10sp"
+                    android:textSize="25sp"
                     android:visibility="invisible"
                     app:layout_constraintBottom_toTopOf="@id/currentTime"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cityName" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
 
                 <TextView
                     android:id="@+id/currentTime"
@@ -97,12 +84,13 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="currentTime 23:49"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:visibility="invisible"
+                    android:layout_marginTop="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/currentDate" />
+                    app:layout_constraintTop_toBottomOf="@id/cityName" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -136,8 +124,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="weather description"
-                android:textSize="12sp"
+                android:textSize="15sp"
                 android:visibility="invisible"
+                android:layout_marginBottom="20dp"
                 app:layout_constraintBottom_toTopOf="@id/weatherDetailShow"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/currentTemp" />
@@ -193,7 +182,9 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:id="@+id/humidity" />
+                            android:id="@+id/humidity"
+                            android:paddingTop="10dp"
+                            android:textSize="13sp"/>
 
                     </LinearLayout>
 
@@ -218,7 +209,9 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:id="@+id/wind" />
+                            android:paddingTop="10dp"
+                            android:id="@+id/wind"
+                            android:textSize="13sp"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -242,7 +235,9 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:id="@+id/feelTemp" />
+                            android:paddingTop="10dp"
+                            android:id="@+id/feelTemp"
+                            android:textSize="13sp"/>
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

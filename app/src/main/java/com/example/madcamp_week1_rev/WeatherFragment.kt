@@ -51,7 +51,6 @@ class WeatherFragment : Fragment() {
 
     private lateinit var cityName: TextView
     private lateinit var currentTemp: TextView
-    private lateinit var currentDate: TextView
     private lateinit var currentTime: TextView
     private lateinit var weatherIcon: ImageView
     private lateinit var progressBar: ProgressBar
@@ -87,7 +86,6 @@ class WeatherFragment : Fragment() {
 
         cityName = view.findViewById(R.id.cityName)
         currentTemp = view.findViewById(R.id.currentTemp)
-        currentDate = view.findViewById(R.id.currentDate)
         currentTime = view.findViewById(R.id.currentTime)
         weatherIcon = view.findViewById(R.id.weatherIcon)
         progressBar = view.findViewById(R.id.weatherLoading)
@@ -149,7 +147,6 @@ class WeatherFragment : Fragment() {
         weatherViewModel.resetFalse()
         progressBar.visibility = View.VISIBLE
         reload.visibility = View.GONE
-        currentDate.visibility = View.GONE
         currentTime.visibility = View.GONE
         currentTemp.visibility = View.GONE
         cityName.visibility = View.GONE
@@ -166,7 +163,6 @@ class WeatherFragment : Fragment() {
 
         progressBar.visibility = View.VISIBLE
         reload.visibility = View.GONE
-        currentDate.visibility = View.GONE
         currentTime.visibility = View.GONE
         currentTemp.visibility = View.GONE
         cityName.visibility = View.GONE
@@ -220,7 +216,6 @@ class WeatherFragment : Fragment() {
                         if (weatherViewModel.getVal().value == true){
                             reload.visibility = View.VISIBLE
                             weatherIcon.visibility = View.VISIBLE
-                            currentDate.visibility = View.VISIBLE
                             currentTemp.visibility = View.VISIBLE
                             currentTime.visibility = View.VISIBLE
                             cityName.visibility = View.VISIBLE
@@ -273,7 +268,6 @@ class WeatherFragment : Fragment() {
         }
 
         weatherIcon.setImageResource(resourceID)
-        currentDate.text = "${date[0]}/${date[1]}/${date[2]}"
         currentTime.text = "$dayString   ${time.split(" ")[1]}"
         weatherDescription.text = weather.weatherDescription
         humidityText.text = "${weather.humidity}%"
