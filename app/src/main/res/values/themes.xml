@@ -5,9 +5,8 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Madcamp_week1_rev" parent="Base.Theme.Madcamp_week1_rev" />
-
-    <color name="colorPrimary">#000000</color>
-
+    <color name="colorPrimary">#35C1F1</color>
+    <color name="colorPrimaryDark">#199BE2</color>
+    <color name="colorAccent">#0078D4</color>
 
 </resources>
