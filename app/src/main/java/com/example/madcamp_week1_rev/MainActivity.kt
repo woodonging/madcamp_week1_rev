@@ -1,11 +1,14 @@
 package com.example.madcamp_week1_rev
 
 import android.content.pm.PackageManager
+import android.graphics.PorterDuff
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import java.io.File
 
@@ -50,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
+            override fun onTabSelected(tab: TabLayout.Tab) {
                 when (tab?.text) {
                     "Contact" -> {
                         supportFragmentManager.beginTransaction().replace(R.id.frame, contact)
@@ -69,10 +72,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {
+            override fun onTabReselected(tab: TabLayout.Tab) {
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                //tab.icon.setColorFilter(ContextCompat.getColor(this,@color))
             }
         })
 
@@ -93,4 +97,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 }
