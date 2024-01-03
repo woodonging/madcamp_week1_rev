@@ -28,6 +28,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
@@ -61,7 +62,7 @@ class WeatherFragment : Fragment() {
     private lateinit var mLocationListener: LocationListener
     private lateinit var weatherViewModel: WeatherViewModel
     private lateinit var validation : MutableLiveData<Boolean>
-    private lateinit var background : ConstraintLayout
+    private lateinit var background : ImageView
     private lateinit var weatherPop: ConstraintLayout
     private lateinit var weatherDescription : TextView
     private lateinit var detailShow : ConstraintLayout
@@ -91,7 +92,7 @@ class WeatherFragment : Fragment() {
         weatherIcon = view.findViewById(R.id.weatherIcon)
         progressBar = view.findViewById(R.id.weatherLoading)
         reload = view.findViewById(R.id.reloadWeather)
-        background = view.findViewById(R.id.weatherView)
+        background = view.findViewById(R.id.background)
         weatherPop = view.findViewById(R.id.weatherPop)
         weatherDescription = view.findViewById(R.id.weatherDescription)
         detailShow = view.findViewById(R.id.detailShow)
@@ -110,6 +111,8 @@ class WeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         reload.setOnClickListener {
             initWhenReload()
+            weatherDetailHide()
+            weatherDetailShow.visibility = View.INVISIBLE
         }
         weatherDetailShow.setOnClickListener{
             weatherDetailShow()
@@ -127,7 +130,6 @@ class WeatherFragment : Fragment() {
         val newHeight = resources.getDimensionPixelSize(R.dimen.new_height)
         layoutParams.height = newHeight
         weatherPop.layoutParams = layoutParams
-        weatherPop.requestLayout()
         detailShow.visibility = View.VISIBLE
         weatherDetailShow.visibility = View.GONE
         weatherDetailHide.visibility = View.VISIBLE
@@ -140,7 +142,7 @@ class WeatherFragment : Fragment() {
         weatherPop.requestLayout()
         detailShow.visibility = View.GONE
         weatherDetailShow.visibility = View.VISIBLE
-        weatherDetailHide.visibility = View.GONE
+        weatherDetailHide.visibility = View.INVISIBLE
     }
 
     private fun initWhenReload(){
@@ -156,6 +158,7 @@ class WeatherFragment : Fragment() {
         detailShow.visibility = View.GONE
         weatherDetailShow.visibility = View.GONE
         weatherDetailHide.visibility = View.GONE
+        weatherDescription.visibility = View.GONE
         getWeatherInCurrentLocation()
     }
 
@@ -172,6 +175,7 @@ class WeatherFragment : Fragment() {
         detailShow.visibility = View.GONE
         weatherDetailShow.visibility = View.GONE
         weatherDetailHide.visibility = View.GONE
+        weatherDescription.visibility = View.GONE
 
         mLocationManager = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -222,6 +226,7 @@ class WeatherFragment : Fragment() {
                             cityName.visibility = View.VISIBLE
                             background.visibility = View.VISIBLE
                             weatherDetailShow.visibility = View.VISIBLE
+                            weatherDescription.visibility = View.VISIBLE
                             progressBar.visibility = View.GONE
                         }
                     })
@@ -245,12 +250,15 @@ class WeatherFragment : Fragment() {
         val resourceID = resources.getIdentifier(weather.icon, "drawable", activity?.packageName)
         val time = getCurrentTime()
         val hour = time.split(" ")[1].split(":")[0].toInt()
+
         var imageId = resources.getIdentifier(weather.updateWeatherImage(hour), "drawable",activity?.packageName)
 
-        weatherViewModel.getImageSrc().observe(viewLifecycleOwner, Observer{
-            imageSrc -> background.setBackgroundResource(imageId)
-        })
-        weatherViewModel.updateBackground(imageId)
+//        weatherViewModel.getImageSrc().observe(viewLifecycleOwner, Observer{
+//            imageSrc -> background.setBackgroundResource(imageId)
+//        })
+//        weatherViewModel.updateBackground(imageId)
+
+        Glide.with(requireContext()).load(imageId).into(background)
 
         val date = getCurrentDate().split("-")
         val dayString = when(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)){
@@ -268,6 +276,11 @@ class WeatherFragment : Fragment() {
         currentDate.text = "${date[0]}/${date[1]}/${date[2]}"
         currentTime.text = "$dayString   ${time.split(" ")[1]}"
         weatherDescription.text = weather.weatherDescription
+        humidityText.text = "${weather.humidity}%"
+        feelsLikeText.text = "${weather.feels_like}℃"
+        windSpeedText.text = "${weather.windspeed}m/s"
+
+        validation.value = true
 
 
     }

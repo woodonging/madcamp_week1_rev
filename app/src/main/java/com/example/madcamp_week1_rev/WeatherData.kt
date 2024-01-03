@@ -27,7 +27,7 @@ class WeatherData{
             weatherData.icon = updateWeatherIcon(weatherData.weatherId)
             weatherData.weatherDescription = jsonObject.getJSONArray("weather").getJSONObject(0).getString("description")
             weatherData.humidity = jsonObject.getJSONObject("main").getString("humidity")
-            weatherData.feels_like = jsonObject.getJSONObject("main").getString("feels_like")
+            weatherData.feels_like = (jsonObject.getJSONObject("main").getDouble("feels_like")-273.15).toInt().toString()
             weatherData.windspeed = jsonObject.getJSONObject("wind").getString("speed")
 
             val lat: Double = (jsonObject.getJSONObject("coord").getDouble("lat"))
@@ -51,7 +51,8 @@ class WeatherData{
     private fun updateWeatherIcon(condition: Int): String {
         when (condition) {
             in 200..299 -> {
-                return "weather_thunderstorm"
+                return "weather_rain"
+                //thunderstorm
             }
             in 300..499 -> {
                 return "weather_rain" //lightrain
@@ -63,7 +64,8 @@ class WeatherData{
                 return "weather_snow"
             }
             in 701..771 -> {
-                return "weather_fog"
+                return "weather_cloudy"
+                //fog
             }
             in 772..799 -> {
                 return "weather_cloudy"
@@ -75,7 +77,8 @@ class WeatherData{
                 return "weather_cloudy"
             }
             in 900..902 -> {
-                return "weather_thunderstorm"
+                return "weather_cloudy"
+                //thunderstorm
             }
             903 -> {
                 return "weather_snow"
@@ -84,7 +87,8 @@ class WeatherData{
                 return "weather_sunny"
             }
             else -> return if (condition in 905..1000) {
-                "weather_thunderstorm"
+                "weather_cloudy"
+                //thunderstorm
             } else "dunno"
         }
 
