@@ -1,5 +1,4 @@
-프로젝트 설명 노션 링크
-https://www.notion.so/Basic-d859fa551a4b4f0ca4c277feb083bd3f?pvs=4
+
 
 
 
